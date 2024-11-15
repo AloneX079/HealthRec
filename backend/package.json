@@ -1,0 +1,29 @@
+{
+  "name": "healthrec",
+  "version": "0.0.1",
+  "description": "HealthRec is a comprehensive and secure platform designed to manage public health records efficiently. The system facilitates easy storage, retrieval, and management of individual and organizational health records, ensuring privacy and accessibility.",
+  "main": "/src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AloneX079/HealthRec.git"
+  },
+  "author": "Alone_X",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AloneX079/HealthRec/issues"
+  },
+  "homepage": "https://github.com/AloneX079/HealthRec#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7"
+  }
+}
