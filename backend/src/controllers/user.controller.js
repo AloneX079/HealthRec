@@ -1,4 +1,6 @@
 const User = require('../models/user.model.js')
+const Hospital = require('../models/hosp.model.js')
+const Pending = require('../models/pa.model.js')
 const asynchandler = require('../utils/asynchandler.js')
 const apierror = require('../utils/apierror.js')
 const apiresponse = require('../utils/apiresponse.js')
@@ -101,9 +103,38 @@ const logoutUser = asynchandler(async(req, res) => {
         .json(new apiresponse(200,{},"User logged out successfully!"))
 })
 
+const getHospitalList = asynchandler(async(req, res) => {
+    const hospitals = await Hospital.find({ isApproved: true }).select("nin hname haddress")
+    return res.status(200)
+        .json(new apiresponse(200, hospitals, "Hospitals fetched successfully!"))
+})
+
+const getDocApproval = asynchandler(async(req, res) => {
+    const {hospid} = req.body
+    if([hospid].some((field)=>field===undefined|| typeof field !== 'string' || (field?.trim() === "")))
+        throw new apierror(400,"Please fill all the fields! ERR:user.controller.l115")
+    const checkHospital = await Hospital.findById(hospid)
+    if(!checkHospital)
+        throw new apierror(404,"Hospital not found! ERR:user.controller.l118")
+    if(checkHospital.isApproved){
+        const newApproval = await Pending.create({
+            doctor: req.user._id,
+            hospital: checkHospital._id
+        })
+        if(!newApproval)
+            throw new apierror(500,"Error creating approval request! ERR:user.controller.l125")
+    }
+    return res.status(200)
+        .json(new apiresponse(200, {}, "Approval request sent successfully!"))
+})
+
+
+
 module.exports = {
     registerUser,
     loginUser,
     getCurrentUser,
-    logoutUser
+    logoutUser,
+    getHospitalList,
+    getDocApproval,
 }

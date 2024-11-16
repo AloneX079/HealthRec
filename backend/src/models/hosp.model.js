@@ -1,7 +1,6 @@
 const mongoose=require('mongoose')
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { validate } = require('./user.model');
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const hospSchema = new mongoose.Schema({
     uid:{
@@ -68,7 +67,7 @@ const hospSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    approvedDoctor: {
+    approvedDoctors: {
         type: [],
         required: false,
     }
