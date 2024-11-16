@@ -1,8 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const app = express();
-const morgan =require('morgan');
+const express = require('express')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const app = express()
+const morgan =require('morgan')
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
@@ -18,8 +18,10 @@ app.use(express.urlencoded({
 app.use(cookieParser())
 app.use(morgan('dev'))
 
-const userRouter = require('./routes/user.route.js');
+const userRouter = require('./routes/user.route.js')
+const hospitalRouter = require('./routes/hospital.route.js')
 
-app.use('/api/v1/user', userRouter);
+app.use('/api/v1/user', userRouter)
+app.use('/api/v1/hosp', hospitalRouter)
 
-module.exports = app;
+module.exports = app
