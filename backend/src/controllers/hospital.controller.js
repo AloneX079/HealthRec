@@ -4,8 +4,8 @@ const Pending = require('../models/pa.model.js')
 const asynchandler = require('../utils/asynchandler.js')
 const apierror = require('../utils/apierror.js')
 const apiresponse = require('../utils/apiresponse.js')
-const jwt = require('jsonwebtoken')
-const { get } = require('mongoose')
+// const jwt = require('jsonwebtoken')
+// const { get } = require('mongoose')
 
 const registerHospital = asynchandler(async (req,res)=>{
     const {nin,hname,haddress,hemail,hpassword} = req.body

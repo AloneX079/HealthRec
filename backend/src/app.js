@@ -20,8 +20,10 @@ app.use(morgan('dev'))
 
 const userRouter = require('./routes/user.route.js')
 const hospitalRouter = require('./routes/hospital.route.js')
+const recordRouter = require('./routes/record.route.js')
 
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/hosp', hospitalRouter)
+app.use('/api/v1/reco', recordRouter)
 
 module.exports = app

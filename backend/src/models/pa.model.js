@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-
+//This model was made to approve Doctor's request to link to hospital
 const paSchema = new mongoose.Schema({
     uid:{
         type: mongoose.Schema.Types.UUID,
@@ -15,6 +15,6 @@ const paSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-const pa = mongoose.model('Pending', paSchema)
+const Pending = mongoose.model('Pending', paSchema)
 
-module.exports = pa
+module.exports = Pending

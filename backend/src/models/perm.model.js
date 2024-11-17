@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-
+//This model grants permission to a doctor to view a patient's record
 const permSchema = new mongoose.Schema({
     uid:{
         type: mongoose.Schema.Types.UUID,
@@ -12,6 +12,10 @@ const permSchema = new mongoose.Schema({
     doctor:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    accessGranted: {
+        type: Date,
+        default: Date.now
     }
 },{timestamps:true})
 
