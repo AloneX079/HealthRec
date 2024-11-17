@@ -74,4 +74,4 @@ const recordSchema = new mongoose.Schema({
     visitHistory:{
         type:[]
     }
-})
+},{timestamps:true})

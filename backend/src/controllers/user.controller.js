@@ -1,6 +1,7 @@
 const User = require('../models/user.model.js')
 const Hospital = require('../models/hosp.model.js')
 const Pending = require('../models/pa.model.js')
+const Perm = require('../models/perm.model.js')
 const asynchandler = require('../utils/asynchandler.js')
 const apierror = require('../utils/apierror.js')
 const apiresponse = require('../utils/apiresponse.js')
@@ -128,6 +129,24 @@ const getDocApproval = asynchandler(async(req, res) => {
         .json(new apiresponse(200, {}, "Approval request sent successfully!"))
 })
 
+const getDocQr = asynchandler(async(req, res) => {
+    const {docobjid} = req.body
+    if(docobjid === undefined || typeof docobjid !== 'string' || (docobjid?.trim() === ""))
+        throw new apierror(400,"Please fill all the fields! ERR:user.controller.l134")
+    const doc = await User.findById(docobjid).select("_id isDoctor")
+    if(!doc)
+        throw new apierror(404,"Doctor not found! ERR:user.controller.l138")
+    if(!doc.isDoctor)
+        throw new apierror(400,"User is not a Doctor! ERR:user.controller.l140")
+    const createPerm = await Perm.create({
+        patient: req.user._id,
+        doctor: doc._id
+    })
+    if(!createPerm)
+        throw new apierror(500,"Error creating permission! ERR:user.controller.l146")
+    return res.status(200)
+        .json(new apiresponse(200, createPerm, "Permission created successfully!"))
+})
 
 
 module.exports = {
@@ -137,4 +156,5 @@ module.exports = {
     logoutUser,
     getHospitalList,
     getDocApproval,
+    getDocQr
 }
