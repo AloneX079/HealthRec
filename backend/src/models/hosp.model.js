@@ -3,10 +3,6 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
 const hospSchema = new mongoose.Schema({
-    uid:{
-        type: mongoose.Schema.Types.UUID,
-        ref: 'Hospital'
-    },
     nin:{
         type:Number,
         required:[true,"NIN cannot be empty!"],

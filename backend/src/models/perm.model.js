@@ -1,10 +1,6 @@
 const mongoose=require('mongoose')
 //This model grants permission to a doctor to view a patient's record
 const permSchema = new mongoose.Schema({
-    uid:{
-        type: mongoose.Schema.Types.UUID,
-        ref: 'Perm'
-    },
     patient:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
