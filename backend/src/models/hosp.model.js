@@ -66,7 +66,11 @@ const hospSchema = new mongoose.Schema({
     approvedDoctors: {
         type: [],
         required: false,
-    }
+    },
+    approvedPharmacist: {
+        type: [],
+        required: false,
+    },
 },{timestamps:true})
 hospSchema.pre('save',async function(next){
     if(!this.isModified('hpassword'))

@@ -5,8 +5,6 @@ const Perm = require('../models/perm.model.js')
 const asynchandler = require('../utils/asynchandler.js')
 const apierror = require('../utils/apierror.js')
 const apiresponse = require('../utils/apiresponse.js')
-const jwt = require('jsonwebtoken')
-const { get } = require('mongoose')
 
 const registerUser = asynchandler(async (req, res) => {
     const {name, email, phone, password} = req.body
@@ -118,12 +116,18 @@ const getDocApproval = asynchandler(async(req, res) => {
     if(!checkHospital)
         throw new apierror(404,"Hospital not found! ERR:user.controller.l118")
     if(checkHospital.isApproved){
+        const ifExists = await Pending.findOne({
+            doctor: req.user._id,
+            hospital: checkHospital._id
+        })
+        if(ifExists)
+            throw new apierror(400,"Pending approval request already exists! ERR:user.controller.l126")
         const newApproval = await Pending.create({
             doctor: req.user._id,
             hospital: checkHospital._id
         })
         if(!newApproval)
-            throw new apierror(500,"Error creating approval request! ERR:user.controller.l125")
+            throw new apierror(500,"Error creating approval request! ERR:user.controller.l132")
     }
     return res.status(200)
         .json(new apiresponse(200, {}, "Approval request sent successfully!"))
@@ -132,22 +136,46 @@ const getDocApproval = asynchandler(async(req, res) => {
 const getDocQr = asynchandler(async(req, res) => {
     const {docobjid} = req.body
     if(docobjid === undefined || typeof docobjid !== 'string' || (docobjid?.trim() === ""))
-        throw new apierror(400,"Please fill all the fields! ERR:user.controller.l134")
+        throw new apierror(400,"Please fill all the fields! ERR:user.controller.l141")
     const doc = await User.findById(docobjid).select("_id isDoctor isPharmacist")
     if(!doc)
-        throw new apierror(404,"Doctor/Pharmacist not found! ERR:user.controller.l138")
+        throw new apierror(404,"Doctor/Pharmacist not found! ERR:user.controller.l144")
     if(!doc.isDoctor && !doc.isPharmacist)
-        throw new apierror(400,"User is not a Doctor or Pharmacist! ERR:user.controller.l140")
+        throw new apierror(400,"User is not a Doctor or Pharmacist! ERR:user.controller.l146")
     const createPerm = await Perm.create({
         patient: req.user._id,
         doctor: doc._id
     })
     if(!createPerm)
-        throw new apierror(500,"Error creating permission! ERR:user.controller.l146")
+        throw new apierror(500,"Error creating permission! ERR:user.controller.l152")
     return res.status(200)
         .json(new apiresponse(200, createPerm, "Permission created successfully!"))
 })
 
+const getPharApproval = asynchandler(async(req, res) => {
+    const {hospid} = req.body
+    if([hospid].some((field)=>field===undefined|| typeof field !== 'string' || (field?.trim() === "")))
+        throw new apierror(400,"Please fill all the fields! ERR:user.controller.l160")
+    const checkHospital = await Hospital.findById(hospid)
+    if(!checkHospital)
+        throw new apierror(404,"Hospital not found! ERR:user.controller.l163")
+    if(checkHospital.isApproved){
+        const ifExists = await Pending.findOne({
+            pharmacist: req.user._id,
+            hospital: checkHospital._id
+        })
+        if(ifExists)
+            throw new apierror(400,"Approval request already exists! ERR:user.controller.l170")
+        const newApproval = await Pending.create({
+            pharmacist: req.user._id,
+            hospital: checkHospital._id
+        })
+        if(!newApproval)
+            throw new apierror(500,"Error creating approval request! ERR:user.controller.l176")
+    }
+    return res.status(200)
+        .json(new apiresponse(200, {}, "Approval request sent successfully!"))
+})
 
 module.exports = {
     registerUser,
@@ -156,5 +184,6 @@ module.exports = {
     logoutUser,
     getHospitalList,
     getDocApproval,
-    getDocQr
+    getDocQr,
+    getPharApproval
 }

@@ -4,10 +4,17 @@ const paSchema = new mongoose.Schema({
     doctor:{
         type: mongoose.Schema.Types.ObjectID,
         ref: 'User',
+        required: false
     },
     hospital:{
         type: mongoose.Schema.Types.ObjectID,
         ref: 'Hospital',
+        required: false
+    },
+    pharmacist:{
+        type: mongoose.Schema.Types.ObjectID,
+        ref: 'User',
+        required: false
     }
 },{timestamps:true})
 

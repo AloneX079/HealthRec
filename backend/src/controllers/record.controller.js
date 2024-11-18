@@ -1,4 +1,4 @@
-const Hospital = require('../models/hosp.model.js')
+//Included Models
 const User = require('../models/user.model.js')
 const Perm = require('../models/perm.model.js')
 const Record = require('../models/reco.model.js')
