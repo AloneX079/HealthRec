@@ -6,11 +6,11 @@ const paSchema = new mongoose.Schema({
         ref: 'Pending'
     },
     doctor:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectID,
         ref: 'User',
     },
     hospital:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectID,
         ref: 'Hospital',
     }
 },{timestamps:true})
