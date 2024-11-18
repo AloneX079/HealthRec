@@ -95,7 +95,9 @@ const upBasicInfo = asynchandler(async(req,res)=>{
         address: req.body.address || undefined,
         maritalStatus: req.body.maritalStatus || undefined,
         ethnicityRace: req.body.ethnicityRace || undefined,
-        smokingAlcohol: req.body.smokingAlcohol || undefined
+        smokingAlcohol: req.body.smokingAlcohol || undefined,
+        insuranceProvider: req.body.insuranceProvider || undefined,
+        insurancePolicyNumber: req.body.insurancePolicyNumber || undefined,
     }
     const filteredUpdateData = Object.fromEntries(
         Object.entries(updateData).filter(([key, value]) => value !== undefined)
@@ -111,23 +113,25 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     const raceRegex = /^[a-zA-Z\s]{3,64}$/
     const smokingAlcoholRegex = /^(Smoke|Alcohol|Both|Clean)$/
     if(filteredUpdateData.fullName && !fullNameRegex.test(filteredUpdateData.fullName))
-        throw new apierror(400,"Invalid Full Name! ERR:record.controller.l112")
+        throw new apierror(400,"Invalid Full Name! ERR:record.controller.l116")
     if(filteredUpdateData.dateOfBirth && !dateOfBirthRegex.test(filteredUpdateData.dateOfBirth))
-        throw new apierror(400,"Invalid Date of Birth! ERR:record.controller.l114")
+        throw new apierror(400,"Invalid Date of Birth! ERR:record.controller.l118")
     if(filteredUpdateData.gender && !genderRegex.test(filteredUpdateData.gender))
-        throw new apierror(400,"Invalid Gender! ERR:record.controller.l116")
+        throw new apierror(400,"Invalid Gender! ERR:record.controller.l120")
     if(filteredUpdateData.bloodGroup && !bloodGroupRegex.test(filteredUpdateData.bloodGroup))
-        throw new apierror(400,"Invalid Blood Group! ERR:record.controller.l118")
+        throw new apierror(400,"Invalid Blood Group! ERR:record.controller.l122")
     if(filteredUpdateData.phoneNumber && !phoneNumberRegex.test(filteredUpdateData.phoneNumber))
-        throw new apierror(400,"Invalid Phone Number! ERR:record.controller.l120")
+        throw new apierror(400,"Invalid Phone Number! ERR:record.controller.l124")
     if(filteredUpdateData.address && !addressRegex.test(filteredUpdateData.address))
-        throw new apierror(400,"Invalid Address! ERR:record.controller.l122")
+        throw new apierror(400,"Invalid Address! ERR:record.controller.l126")
     if(filteredUpdateData.maritalStatus && !maritalStatusRegex.test(filteredUpdateData.maritalStatus))
-        throw new apierror(400,"Invalid Marital Status! ERR:record.controller.l124")
+        throw new apierror(400,"Invalid Marital Status! ERR:record.controller.l128")
     if(filteredUpdateData.ethnicityRace && !raceRegex.test(filteredUpdateData.ethnicityRace))
-        throw new apierror(400,"Invalid Ethicity/Race! ERR:record.controller.l126")
+        throw new apierror(400,"Invalid Ethicity/Race! ERR:record.controller.l130")
     if(filteredUpdateData.smokingAlcohol && !smokingAlcoholRegex.test(filteredUpdateData.smokingAlcohol))
-        throw new apierror(400,"Invalid Smoking/Alcohol! ERR:record.controller.l128")
+        throw new apierror(400,"Invalid Smoking/Alcohol! ERR:record.controller.l132")
+    if(filteredUpdateData.insuranceProvider && !fullNameRegex.test(filteredUpdateData.insuranceProvider))
+        throw new apierror(400,"Invalid Insurance Provider! ERR:record.controller.l134")
     const checkExists = await Record.findOne({
         pid:user._id
     })
@@ -405,6 +409,178 @@ const getPatientVisitHistory = asynchandler(async(req,res)=>{
         .json(new apiresponse(200, visitHistory, "Visit History Fetched Successfully!"))
 })
 
+const upPatientVitals = asynchandler(async (req,res)=>{
+    if(!req.user.isDoctor)
+        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l162")
+    const {patid} = req.body
+    if(!patid)
+        throw new apierror(400,"Patient ID Required! ERR:record.controller.l165")
+    const user = await User.findById(patid).select("name")
+    if(!user)
+        throw new apierror(404,"Patient Not Found! ERR:record.controller.l168")
+    const checkPerm = await Perm.findOne({
+        doctor: req.user._id,
+        patient: patid
+    })
+    if(!checkPerm)
+        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l174")
+    const updateData = {
+        heightInCm: req.body.heightInCm || undefined,
+        weightInKg: req.body.weightInKg || undefined,
+        LastBloodPressureInMmHg: req.body.LastBloodPressureInMmHg || undefined,
+        LastHeartRateInBpm: req.body.LastHeartRateInBpm || undefined
+    }
+    const filteredUpdateData = Object.fromEntries(
+        Object.entries(updateData).filter(([key, value]) => value !== undefined)
+    )
+    const heInCmRegex = /^\d{3}$/
+    const weInKgRegex = /^\d{2,3}$/
+    const bpRegex = /^\d{2,3}\/\d{2,3}$/
+    const hrRegex = /^\d{2,3}$/
+    if(filteredUpdateData.heightInCm && !heInCmRegex.test(filteredUpdateData.heightInCm))
+        throw new apierror(400,"Invalid Height! ERR:record.controller.l437")
+    if(filteredUpdateData.weightInKg && !weInKgRegex.test(filteredUpdateData.weightInKg))
+        throw new apierror(400,"Invalid Weight! ERR:record.controller.l439")
+    if(filteredUpdateData.LastBloodPressureInMmHg && !bpRegex.test(filteredUpdateData.LastBloodPressureInMmHg))
+        throw new apierror(400,"Invalid Blood Pressure! ERR:record.controller.l441")
+    if(filteredUpdateData.LastHeartRateInBpm && !hrRegex.test(filteredUpdateData.LastHeartRateInBpm))
+        throw new apierror(400,"Invalid Heart Rate! ERR:record.controller.l443")
+    const checkExists = await Record.findOne({
+        pid:user._id
+    })
+    if(!checkExists){
+        const record = await Record.create({
+            ...filteredUpdateData,
+            pid: user._id
+        });
+        if(!record){
+            throw new apierror(500,"Error Creating Record! ERR:record.controller.l447")
+        }
+        return res.status(201)
+            .json(new apiresponse(201,record,"Record Created Successfully!"))
+    }else{
+        const record = await Record.findOneAndUpdate({
+            pid:user._id
+        },{
+            ...filteredUpdateData
+        },{
+            new:true
+        })
+        return res.status(200)
+            .json(new apiresponse(200,record,"Record Updated Successfully!"))
+    }
+})
+
+const upEmergencyContact = asynchandler(async(req,res)=>{
+    const user = req.user
+    const {uname,uphone} = req.body
+    if([uname,uphone].some((field)=>field===undefined|| typeof field !== 'string' || (field?.trim() === "")))
+        throw new apierror(400,"Invalid Emergency Contact! ERR:record.controller.l478")
+    const phoneRegex = /^\d{10}$/
+    if(!phoneRegex.test(uphone))
+        throw new apierror(400,"Invalid Phone Number! ERR:record.controller.l481")
+    const checkExists = await Record.findOne({
+        pid:user._id
+    })
+    if(!checkExists){
+        const record = await Record.create({
+            pid: user._id,
+            emergencyContactPhone: [{
+                name: uname,
+                phone: uphone
+            }]
+        })
+        return res.status(201)
+            .json(new apiresponse(201,record,"Emergency Contact Created Successfully!"))
+    }else{
+        const record = await Record.findOneAndUpdate({
+            pid:user._id
+        },{
+            $push: {
+                emergencyContactPhone: {
+                    name: uname,
+                    phone: uphone
+                }
+            }
+        },{new:true})
+        return res.status(200)
+            .json(new apiresponse(200,record,"Emergency Contact Updated Successfully!"))
+    }
+})
+
+const upVisitHistory = asynchandler(async(req,res)=>{
+    if(!req.user.isDoctor)
+        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l513")
+    const {patid,illness,prescription} = req.body
+    if(!patid || !illness || !prescription)
+        throw new apierror(400,"Fields Required! ERR:record.controller.l516")
+    const patient = await User.findById(patid)
+    if(!patient)
+        throw new apierror(404,"Patient Not Found! ERR:record.controller.l519")
+    const checkPerm = await Perm.findOne({
+        doctor: req.user._id,
+        patient: patid
+    })
+    if(!checkPerm)
+        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l525")
+    const checkExists = await Record.findOne({
+        pid:patid
+    })
+    if(!checkExists){
+        const pres = await Presc.create({
+            doctor: req.user._id,
+            illness: illness,
+            prescription: prescription
+        })
+        if(!pres)
+            throw new apierror(500,"Error Creating Prescription! ERR:record.controller.l536")
+        const record = await Record.create({
+            pid: patid,
+            visitHistory: [pres._id]
+        })
+        if(!record)
+            throw new apierror(500,"Error Creating Record! ERR:record.controller.l542")
+        return res.status(201)
+            .json(new apiresponse(201,record,"Record Created Successfully!"))
+    }else{
+        const pres = await Presc.create({
+            doctor: req.user._id,
+            illness: illness,
+            prescription: prescription
+        })
+        if(!pres)
+            throw new apierror(500,"Error Creating Prescription! ERR:record.controller.l552")
+        checkExists.visitHistory.push(pres._id)
+        await checkExists.save()
+        return res.status(200)
+            .json(new apiresponse(200,checkExists,"Record Updated Successfully!"))
+    }
+})
+
+const getPresPhar = asynchandler(async(req,res)=>{
+    if(!req.user.isPharmacist)
+        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l565")
+    const checkPerms = await Perm.find({
+        doctor: req.user._id
+    })
+    if(!checkPerms)
+        throw new apierror(404,"No Permissions Found! ERR:record.controller.l570")
+    const prescs = []
+    for(let i=0;i<checkPerms.length;i++){
+        const record = await Record.findOne({
+            pid: checkPerms[i].patient
+        })
+        if(!record)
+            throw new apierror(404,"No Record Found! ERR:record.controller.l576")
+        for(let j=0;j<record.visitHistory.length;j++){
+            const presc = await Presc.findById(record.visitHistory[j])
+            prescs.push(presc)
+        }
+    }
+    return res.status(200)
+        .json(new apiresponse(200,prescs,"Prescriptions Fetched Successfully!"))
+})
+
 module.exports={
     getBasicInfo,
     getMedicalHistory,
@@ -414,6 +590,7 @@ module.exports={
     getVisitHistory,
     upBasicInfo,
     upMedicalHistory,
+    upPatientVitals,
     getPatientList,
     getPatientBasicInfo,
     getPatientMedicalHistory,
@@ -421,4 +598,7 @@ module.exports={
     getPatientInsuranceInfo,
     getPatientEmergencyContact,
     getPatientVisitHistory,
+    upEmergencyContact,
+    upVisitHistory,
+    getPresPhar
 }

@@ -133,11 +133,11 @@ const getDocQr = asynchandler(async(req, res) => {
     const {docobjid} = req.body
     if(docobjid === undefined || typeof docobjid !== 'string' || (docobjid?.trim() === ""))
         throw new apierror(400,"Please fill all the fields! ERR:user.controller.l134")
-    const doc = await User.findById(docobjid).select("_id isDoctor")
+    const doc = await User.findById(docobjid).select("_id isDoctor isPharmacist")
     if(!doc)
-        throw new apierror(404,"Doctor not found! ERR:user.controller.l138")
-    if(!doc.isDoctor)
-        throw new apierror(400,"User is not a Doctor! ERR:user.controller.l140")
+        throw new apierror(404,"Doctor/Pharmacist not found! ERR:user.controller.l138")
+    if(!doc.isDoctor && !doc.isPharmacist)
+        throw new apierror(400,"User is not a Doctor or Pharmacist! ERR:user.controller.l140")
     const createPerm = await Perm.create({
         patient: req.user._id,
         doctor: doc._id
