@@ -3,10 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    uid:{
-        type: mongoose.Schema.Types.UUID,
-        ref: 'User'
-    },
     name: {
         type: String,
         required: [true, "Name cannot be empty!"],
