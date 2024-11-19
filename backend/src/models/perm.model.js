@@ -11,7 +11,8 @@ const permSchema = new mongoose.Schema({
     },
     accessGranted: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: { expireAfterSeconds: 1800 }
     }
 },{timestamps:true})
 
