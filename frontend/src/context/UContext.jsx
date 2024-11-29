@@ -1,17 +1,19 @@
-import React, {useState, createContext} from 'react'
+import { createContext, useState } from "react";
 
-export const UContextProvider = createContext(null)
+export const UContextProvider = createContext();
 
-const UContext = ({children}) => {
-    const [user, setUser] = useState(null)
-    
+const UContext = ({ children }) => {
+    const [user, setUser] = useState(false);
+
     return (
-        <UContextProvider.Provider value={{
-            user, 
-            setUser,
-            }}>
+        <UContextProvider.Provider
+            value={{
+                user,
+                setUser,
+            }}
+        >
             {children}
         </UContextProvider.Provider>
-    )
-}
+    );
+};
 export default UContext;
