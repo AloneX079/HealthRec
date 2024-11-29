@@ -2,12 +2,12 @@ import React from 'react'
 import { useContext,useEffect, useState } from 'react'
 import {Form, Link, useLocation, useNavigate} from 'react-router-dom'
 import { login, register } from "../api/auth"
-import UContext from '../context/UContext.jsx'
 import ErrorText from '../components/ErrorText.jsx'
+import useUserContext from "../hooks/useUserContext.js"
 
 const Login = () => {
     const {pathname} = useLocation()
-    const context = useContext(UContext)
+    const {user,setUser} = useUserContext()
     const navigate = useNavigate()
     const initialError = {
         status:false,
@@ -36,9 +36,9 @@ const Login = () => {
         }
         localStorage.setItem("accessToken", loginResponse.userData["accessToken"])
         // console.log(loginResponse.userData["loggedInUser"])
-        context.setUser(loginResponse.userData["loggedInUser"]);
+        setUser(loginResponse.userData["loggedInUser"]);
         
-        return navigate("/dashboard",{replace:true})
+        return navigate("/",{replace:true})
     }
     const handleRegister = async(e) => {
         e.preventDefault();
@@ -47,9 +47,9 @@ const Login = () => {
         if(registerResponse.success==false){
             return  setError({status:true, message:registerResponse.message.data})
         }
-        context.setUser(userData["data"]);
+        setUser(userData["data"]);
 
-        return navigate("/dashboard",{replace:true})
+        return navigate("/",{replace:true})
     }
   return (
     <section className="w-full flex flex-col justify-start items-center">

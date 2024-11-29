@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
 import Footer from "../components/Footer.jsx"
 import { useNavigate } from "react-router-dom"
-import UContext from "../context/UContext.jsx"
+import useUserContext from "../hooks/useUserContext.js"
 
 function Home() {
-  const context = useContext(UContext)
+  const context = useUserContext()
   const navigate = useNavigate()
   return (
     <section className="w-full flex-box flex-col">
