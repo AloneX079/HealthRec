@@ -88,7 +88,7 @@ const Login = () => {
                                     setError(initialError);
                                     setLogInCredentials({
                                         ...logInCredentials,
-                                        phone: e.target.value,  // Fix here: update phone instead of name
+                                        phone: e.target.value,
                                     });
                                 }}
                                 type="text"
@@ -106,7 +106,7 @@ const Login = () => {
                             setError(initialError);
                             setLogInCredentials({
                                 ...logInCredentials,
-                                email: e.target.value,  // Fix here: update email instead of name
+                                email: e.target.value,
                             });
                         }}
                         type="email"
@@ -122,7 +122,7 @@ const Login = () => {
                             setError(initialError);
                             setLogInCredentials({
                                 ...logInCredentials,
-                                password: e.target.value,  // Fix here: update password instead of name
+                                password: e.target.value,
                             });
                         }}
                         type="password"
