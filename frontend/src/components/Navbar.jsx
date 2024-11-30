@@ -42,7 +42,7 @@ function Navbar() {
                                     Feedback
                                 </NavLink>
                             </li>
-                            {/* {user.isDoctor ?
+                            {user?.isDoctor ?
                                 <li>
                                 <NavLink
                                     className={() =>
@@ -54,7 +54,7 @@ function Navbar() {
                                 </li>
                             : null}
                             {
-                                user.isAdmin ?
+                                user?.isAdmin ?
                                 <li>
                                 <NavLink
                                     className={() =>
@@ -64,7 +64,7 @@ function Navbar() {
                                     Admin Panel
                                 </NavLink>
                                 </li>
-                            :null} */}
+                            :null}
                         </ul>
                     </div>
                     <div className="flex items-center lg:order-2">

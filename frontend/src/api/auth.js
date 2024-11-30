@@ -42,7 +42,7 @@ export const authLogin = async(token)=>{
         });
 
         if (status == 200) {
-            return data.data;
+            return { success:true, data: data.data};
         }
     } catch (e) {
         return { success: false, message: e.response.data.data };

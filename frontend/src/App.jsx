@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { authLogin } from "./api/auth";
 import Navbar from "./components/Navbar.jsx";
@@ -8,17 +8,25 @@ import useUserContext from "./hooks/useUserContext.js";
 function App() {
     const { user, setUser } = useUserContext();
     const { pathname } = useLocation();
+    const [loading, setLoading] = useState(true);
     // console.log(user);
     useEffect(() => {
         const auth = async () => {
-            const userData = await authLogin(
-                localStorage.getItem("accessToken")
-            );
+            setLoading(true);
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                setUser(null);
+                setLoading(false);
+                return;
+            }
+            const userData = await authLogin(token);
             if (userData.success) {
-                setUser(userData);
+                setUser(userData.data);
             } else {
                 setUser(null);
+                localStorage.removeItem("accessToken");
             }
+            setLoading(false);
         };
         auth();
     }, [setUser]);
