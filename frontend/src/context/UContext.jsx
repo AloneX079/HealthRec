@@ -10,6 +10,7 @@ const UContext = ({ children }) => {
             value={{
                 user,
                 setUser,
+
             }}
         >
             {children}

@@ -42,7 +42,29 @@ function Navbar() {
                                     Feedback
                                 </NavLink>
                             </li>
-                            
+                            {/* {user.isDoctor ?
+                                <li>
+                                <NavLink
+                                    className={() =>
+                                        `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                                    }
+                                >
+                                    Doctor Panel
+                                </NavLink>
+                                </li>
+                            : null}
+                            {
+                                user.isAdmin ?
+                                <li>
+                                <NavLink
+                                    className={() =>
+                                        `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                                    }
+                                >
+                                    Admin Panel
+                                </NavLink>
+                                </li>
+                            :null} */}
                         </ul>
                     </div>
                     <div className="flex items-center lg:order-2">
