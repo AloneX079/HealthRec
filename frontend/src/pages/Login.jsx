@@ -47,7 +47,8 @@ const Login = () => {
         if(registerResponse.success==false){
             return  setError({status:true, message:registerResponse.message.data})
         }
-        setUser(userData["data"]);
+        localStorage.setItem("accessToken", registerResponse.userData["accessToken"])
+        setUser(registerResponse.userData["loggedInUser"]);
 
         return navigate("/",{replace:true})
     }

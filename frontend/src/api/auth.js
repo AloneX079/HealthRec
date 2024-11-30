@@ -11,7 +11,7 @@ export const login = async(loginInfo) => {
         }
     }
     catch(err){
-        return {success:false,message:err.reponse.data.data}
+        return {success:false,message:err.response.data.data}
     }
 }
 
@@ -26,7 +26,6 @@ export const register = async(loginInfo)=>{
         if (status != 201) {
             throw new Error(data);
         }
-        console.log(data);
         return { success: true, userData: data.data };
     } catch (e) {
         return { success: false, message: e.response.data.data };

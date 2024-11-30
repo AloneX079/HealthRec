@@ -12,9 +12,9 @@ function Home() {
             <h1 className="text-4xl font-bold text-center">
             Welcome to the Home Page
             </h1>
-            <button className="btn" onClick={() => navigate("/login")}>
+            {/* <button className="btn" onClick={() => navigate("/login")}>
             Login
-            </button>
+            </button> */}
         </div>
         <Footer />
     </section>
