@@ -9,6 +9,7 @@ import {
   getVisitHistory,
 } from "../api/GET";
 import useRecContext from "../hooks/useRecContext";
+import usePresContext from "../hooks/usePresContext";
 import {
   HeartPulse,
   UserRound,
@@ -22,12 +23,12 @@ function Dashboard() {
   const [selectedItem, setSelectedItem] = useState("Basic Information");
   const [isEditing, setIsEditing] = useState(false);
   const { record, setRecord } = useRecContext();
+  const { Pres, setPres } = usePresContext();
   const handleEditToggle = () => setIsEditing(!isEditing);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecord((prev) => ({ ...prev, [name]: value }));
   };
-  console.log(record);
   const saveChanges = () => {
     // Call API to save changes or handle it locally
     setIsEditing(false);
@@ -190,19 +191,45 @@ function Dashboard() {
       <div className="p-6 bg-white rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-green-900">Vitals</h2>
+          <button
+            onClick={handleEditToggle}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            {isEditing ? "Cancel" : "Edit"}
+          </button>
         </div>
         <div className="space-y-4">
           <div className="flex justify-between">
             <span className="text-lg font-medium text-green-800">
-              Height (cm) :
+              Height (cm):
             </span>
-            <span className="text-lg">{record?.heightInCm}</span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="heightInCm"
+                value={record?.heightInCm}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">{record?.heightInCm}</span>
+            )}
           </div>
           <div className="flex justify-between">
             <span className="text-lg font-medium text-green-800">
-              Weight (kg) :
+              Weight (Kg):
             </span>
-            <span className="text-lg">{record?.weightInKg}</span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="weightInKg"
+                value={record?.weightInKg}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">{record?.weightInKg}</span>
+            )}
           </div>
           <div className="flex justify-between">
             <span className="text-lg font-medium text-green-800">
@@ -442,7 +469,46 @@ function Dashboard() {
         )}
       </div>
     ),
-    "Visit History": "",
+    "Visit History": (
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-green-900">
+            Visit History
+          </h2>
+        </div>
+        <div className="space-y-4">
+          <div
+            className="h-64 overflow-y-auto border border-gray-300 rounded-lg p-4"
+            style={{ maxHeight: "256px" }}
+          >
+            {Pres?.map((item, index) => (
+              <div
+                key={index}
+                className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
+              >
+                <p className="text-lg font-medium text-green-800">
+                  Doctor: <span className="text-gray-800">{item.doctor}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Illness: <span className="text-gray-800">{item.illness}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Prescription:{" "}
+                  <span className="text-gray-800">{item.prescription}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Created At:{" "}
+                  <span className="text-gray-800">{item.createdAt}</span>
+                </p>
+              </div>
+            ))}
+            {Pres?.length === 0 && (
+              <p className="text-center text-gray-600">No records available.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    ),
   };
   useEffect(() => {
     const fetchRecords = async () => {
@@ -458,11 +524,10 @@ function Dashboard() {
         ...medicalHistResponse.data.data,
         ...insuranceResponse.data.data,
         ...emergencyResponse.data.data,
-        ...visitHistoryResponse.data.data,
       };
-
       if (basicresponse.success) {
         setRecord(mergedData);
+        setPres(visitHistoryResponse.data.data);
       } else {
         console.error("Failed to fetch record:", response.message);
       }

@@ -545,7 +545,8 @@ const upVisitHistory = asynchandler(async(req,res)=>{
             .json(new apiresponse(201,record,"Record Created Successfully!"))
     }else{
         const pres = await Presc.create({
-            doctor: req.user._id,
+            doctorid: req.user._id,
+            doctor: req.user.name,
             illness: illness,
             prescription: prescription
         })
@@ -554,7 +555,7 @@ const upVisitHistory = asynchandler(async(req,res)=>{
         checkExists.visitHistory.push(pres._id)
         await checkExists.save()
         return res.status(200)
-            .json(new apiresponse(200,checkExists,"Record Updated Successfully!"))
+            .json(new apiresponse(200,pres,"Record Updated Successfully!"))
     }
 })
 

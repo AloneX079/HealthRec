@@ -1,21 +1,20 @@
 import { createContext, useState } from "react";
 
-export const PresContextProvider = createContext()
+export const PresContextProvider = createContext();
 
 const PresContext = ({ children }) => {
-    const [Pres, setPres] = useState(null)
+  const [Pres, setPres] = useState(null);
 
-    return (
-        <PresContextProvider.Provider
-            value={{
-                Pres,
-                setPres,
-
-            }}
-        >
-            {children}
-        </PresContextProvider.Provider>
-    );
+  return (
+    <PresContextProvider.Provider
+      value={{
+        Pres,
+        setPres,
+      }}
+    >
+      {children}
+    </PresContextProvider.Provider>
+  );
 };
 
-export default PresContext
+export default PresContext;
