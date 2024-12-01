@@ -25,10 +25,10 @@ const recordSchema = new mongoose.Schema({
     address:{
         type:String
     },
-    maritialStatus:{
+    maritalStatus:{
         type:String
     },
-    ethinicityRace:{
+    ethnicityRace:{
         type:String
     },
     smokingAlcohol:{

@@ -265,7 +265,7 @@ const getPatientBasicInfo = asynchandler(async(req,res)=>{
     }
     const basicInfo = await Record.findOne({
         pid: patid
-    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritialStatus ethinicityRace smokingAlcohol')
+    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethincityRace smokingAlcohol')
     console.log(basicInfo)
     if(!basicInfo){
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
