@@ -9,7 +9,7 @@ const prescSchema = new mongoose.Schema({
         type:String
     },
     prescription:{
-        type:[]
+        type:String
     }
 },{timestamps:true})
 
