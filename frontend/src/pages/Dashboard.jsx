@@ -27,7 +27,7 @@ function Dashboard() {
     const { name, value } = e.target;
     setRecord((prev) => ({ ...prev, [name]: value }));
   };
-
+  console.log(record);
   const saveChanges = () => {
     // Call API to save changes or handle it locally
     setIsEditing(false);
@@ -459,12 +459,6 @@ function Dashboard() {
         ...insuranceResponse.data.data,
         ...emergencyResponse.data.data,
         ...visitHistoryResponse.data.data,
-      };
-      const visitHistory = async (objid) => {
-        try {
-        } catch (error) {
-          return { success: false, message: error.message };
-        }
       };
 
       if (basicresponse.success) {

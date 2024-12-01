@@ -1,9 +1,12 @@
 const mongoose=require('mongoose')
 
 const prescSchema = new mongoose.Schema({
-    doctor:{
+    doctorid:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    doctor:{
+        type: String,
     },
     illness:{
         type:String
