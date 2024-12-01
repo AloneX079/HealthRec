@@ -581,6 +581,33 @@ const getPresPhar = asynchandler(async(req,res)=>{
         .json(new apiresponse(200,prescs,"Prescriptions Fetched Successfully!"))
 })
 
+const upInsuranceInfo = asynchandler(async(req,res)=>{
+    const checkExists = await Record.findOne({
+        pid:req.user._id
+    })
+    if(!checkExists){
+        const record = await Record.create({
+            pid: req.user._id,
+            insuranceProvider: req.body.insuranceProvider,
+            insurancePolicyNumber: req.body.insurancePolicyNumber
+        })
+        return res.status(201)
+            .json(new apiresponse(201,record,"Insurance Updated Successfully!"))
+    }else{
+        const record = await Record.findOneAndUpdate({
+            pid:req.user._id
+        },{
+            insuranceProvider: req.body.insuranceProvider,
+            insurancePolicyNumber: req.body.insurancePolicyNumber
+        },{
+            new:true
+        })
+        return res.status(200)
+            .json(new apiresponse(200,record,"Insurance Updated Successfully!"))
+    }
+})
+
+
 module.exports={
     getBasicInfo,
     getMedicalHistory,
@@ -600,5 +627,6 @@ module.exports={
     getPatientVisitHistory,
     upEmergencyContact,
     upVisitHistory,
-    getPresPhar
+    getPresPhar,
+    upInsuranceInfo
 }

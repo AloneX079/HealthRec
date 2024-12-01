@@ -16,7 +16,8 @@ const{
     getPatientEmergencyContact,
     getPatientVisitHistory,
     upEmergencyContact,
-    getPresPhar
+    getPresPhar,
+    upInsuranceInfo
 }= require('../controllers/record.controller.js');
 const {verifyJWT} = require('../middlewares/auth.mw.js')
 
@@ -42,6 +43,7 @@ router.route('/upbasicinf').post(verifyJWT,upBasicInfo)
 router.route('/upmedhist').post(verifyJWT,upMedicalHistory)
 router.route('/upvitals').post(verifyJWT,upPatientVitals)
 router.route('/upemercont').post(verifyJWT,upEmergencyContact)
+router.route('/upinsinfo').post(verifyJWT,upInsuranceInfo)
 
 
 

@@ -1,6 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import Footer from "../components/Footer";
-import { getBasicRecord } from "../api/GET";
+import {
+  getBasicRecord,
+  getVitals,
+  getMedHistory,
+  getInsuranceInfo,
+} from "../api/GET";
 import useRecContext from "../hooks/useRecContext";
 import {
   HeartPulse,
@@ -120,34 +125,34 @@ function Dashboard() {
           </div>
           <div className="flex justify-between">
             <span className="text-lg font-medium text-green-800">
-              Maritial Status:
+              Marital Status:
             </span>
             {isEditing ? (
               <input
                 type="text"
                 name="maritialStatus"
-                value={record?.maritialStatus}
+                value={record?.maritalStatus}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">{record?.maritialStatus}</span>
+              <span className="text-lg">{record?.maritalStatus}</span>
             )}
           </div>
           <div className="flex justify-between">
             <span className="text-lg font-medium text-green-800">
-              Ethinicity / Race:
+              Ethnicity / Race:
             </span>
             {isEditing ? (
               <input
                 type="text"
-                name="ethinicityRace"
-                value={record?.ethinicityRace}
+                name="ethnicityRace"
+                value={record?.ethnicityRace}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">{record?.ethinicityRace}</span>
+              <span className="text-lg">{record?.ethnicityRace}</span>
             )}
           </div>
           <div className="flex justify-between">
@@ -179,25 +184,186 @@ function Dashboard() {
         )}
       </div>
     ),
-    Vitals:
-      "This section will display the patient's vitals like blood pressure, temperature, etc.",
-    "Medical History":
-      "This section will display medical history of the patient.",
-    "Insurance Information": "This section will display insurance information.",
+    Vitals: (
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-green-900">Vitals</h2>
+        </div>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Height (cm) :
+            </span>
+            <span className="text-lg">{record?.heightInCm}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Weight (kg) :
+            </span>
+            <span className="text-lg">{record?.weightInKg}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Last Blood Pressure (MmHg) :
+            </span>
+            <span className="text-lg">{record?.LastBloodPressureInMmHg}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Last Heart Rate (BPM) :
+            </span>
+            <span className="text-lg">{record?.LastHeartRateInBpm}</span>
+          </div>
+        </div>
+      </div>
+    ),
+    "Medical History": (
+      <div className="p-6 bg-white rounded-lg shadow-md h-full overflow-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-green-900">
+            Medical History
+          </h2>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <span className="text-lg font-medium text-green-800 block mb-2">
+              Medical Conditions:
+            </span>
+            <span className="text-lg text-green-700">
+              {record?.medicalHistory?.length > 0
+                ? record.medicalHistory.join(", ")
+                : "No records found."}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-lg font-medium text-green-800 block mb-2">
+              Family Medical Conditions:
+            </span>
+            <span className="text-lg text-green-700">
+              {record?.familyMedicalHistory?.length > 0
+                ? record.familyMedicalHistory.join(", ")
+                : "No records found."}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-lg font-medium text-green-800 block mb-2">
+              Allergies:
+            </span>
+            <span className="text-lg text-green-700">
+              {record?.allergies?.length > 0
+                ? record.allergies.join(", ")
+                : "No allergies found."}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-lg font-medium text-green-800 block mb-2">
+              Immunization History:
+            </span>
+            <span className="text-lg text-green-700">
+              {record?.immunizationHistory?.length > 0
+                ? record.immunizationHistory.join(", ")
+                : "No immunization records found."}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-lg font-medium text-green-800 block mb-2">
+              Surgeries Undergone:
+            </span>
+            <span className="text-lg text-green-700">
+              {record?.surgeriesUndergone?.length > 0
+                ? record.surgeriesUndergone.join(", ")
+                : "No surgeries recorded."}
+            </span>
+          </div>
+        </div>
+      </div>
+    ),
+    "Insurance Information": (
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-green-900">
+            Insurance Information
+          </h2>
+          <button
+            onClick={handleEditToggle}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            {isEditing ? "Cancel" : "Edit"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Insurance Provider :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="fullName"
+                value={record?.insuranceProvider}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">{record?.insuranceProvider}</span>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Insurance Policy Number :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="fullName"
+                value={record?.insurancePolicyNumber}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">{record?.insurancePolicyNumber}</span>
+            )}
+          </div>
+        </div>
+        {isEditing && (
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={saveChanges}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
+      </div>
+    ),
     "Emergency Contact": "This section will display emergency contact details.",
     "Visit History":
       "This section will display visit history including past appointments, diagnoses, etc.",
   };
   useEffect(() => {
-    const fetchBasicRecord = async () => {
-      const response = await getBasicRecord();
-      if (response.success) {
-        setRecord(response.data.data);
+    const fetchRecords = async () => {
+      const basicresponse = await getBasicRecord();
+      const vitalsResponse = await getVitals();
+      const medicalHistResponse = await getMedHistory();
+      const insuranceResponse = await getInsuranceInfo();
+      const mergedData = {
+        ...basicresponse.data.data,
+        ...vitalsResponse.data.data,
+        ...medicalHistResponse.data.data,
+        ...insuranceResponse.data.data,
+      };
+      if (basicresponse.success && vitalsResponse.success) {
+        setRecord(mergedData);
       } else {
         console.error("Failed to fetch record:", response.message);
       }
     };
-    fetchBasicRecord();
+    fetchRecords();
   }, [setRecord]);
   return (
     <section>
