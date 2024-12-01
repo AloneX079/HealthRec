@@ -71,3 +71,39 @@ export const getInsuranceInfo = async() => {
         return {success: false, message: error.message}
     }
 }
+
+export const getEmergencyContact = async() => {
+    try{
+        const {data, status} = await axiosInstance.get('/reco/getemercont',{
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            params: {}
+        })
+        if(status != 200){
+            throw  new Error("Error while fetching data")
+        }
+        return {success: true, data: data}
+    }
+    catch(error){
+        return {success: false, message: error.message}
+    }
+}
+
+export const getVisitHistory = async() => {
+    try{
+        const {data, status} = await axiosInstance.get('/reco/getvishist',{
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            params: {}
+        })
+        if(status != 200){
+            throw  new Error("Error while fetching data")
+        }
+        return {success: true, data: data}
+    }
+    catch(error){
+        return {success: false, message: error.message}
+    }
+}

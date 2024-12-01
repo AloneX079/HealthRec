@@ -5,6 +5,8 @@ import {
   getVitals,
   getMedHistory,
   getInsuranceInfo,
+  getEmergencyContact,
+  getVisitHistory,
 } from "../api/GET";
 import useRecContext from "../hooks/useRecContext";
 import {
@@ -341,9 +343,106 @@ function Dashboard() {
         )}
       </div>
     ),
-    "Emergency Contact": "This section will display emergency contact details.",
-    "Visit History":
-      "This section will display visit history including past appointments, diagnoses, etc.",
+    "Emergency Contact": (
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-green-900">
+            Emergency Contact Information
+          </h2>
+          <button
+            onClick={handleEditToggle}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            {isEditing ? "Cancel" : "Edit"}
+          </button>
+        </div>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Responder Name :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="fullName"
+                value={record?.emergencyContactPhone[0]?.name}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">
+                {record?.emergencyContactPhone[0]?.name}
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Responder Phone :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="fullName"
+                value={record?.emergencyContactPhone[0]?.phone}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">
+                {record?.emergencyContactPhone[0]?.phone}
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Backup Responder Name :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="emergencyContactPhone[1].name"
+                value={record?.emergencyContactPhone[1]?.name}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">
+                {record?.emergencyContactPhone[1]?.name}
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Backup Responder Phone :
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                name="emergencyContactPhone[1].phone"
+                value={record?.emergencyContactPhone[1]?.phone}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-3/5"
+              />
+            ) : (
+              <span className="text-lg">
+                {record?.emergencyContactPhone[1]?.phone}
+              </span>
+            )}
+          </div>
+        </div>
+        {isEditing && (
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={saveChanges}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
+      </div>
+    ),
+    "Visit History": "",
   };
   useEffect(() => {
     const fetchRecords = async () => {
@@ -351,13 +450,24 @@ function Dashboard() {
       const vitalsResponse = await getVitals();
       const medicalHistResponse = await getMedHistory();
       const insuranceResponse = await getInsuranceInfo();
+      const emergencyResponse = await getEmergencyContact();
+      const visitHistoryResponse = await getVisitHistory();
       const mergedData = {
         ...basicresponse.data.data,
         ...vitalsResponse.data.data,
         ...medicalHistResponse.data.data,
         ...insuranceResponse.data.data,
+        ...emergencyResponse.data.data,
+        ...visitHistoryResponse.data.data,
       };
-      if (basicresponse.success && vitalsResponse.success) {
+      const visitHistory = async (objid) => {
+        try {
+        } catch (error) {
+          return { success: false, message: error.message };
+        }
+      };
+
+      if (basicresponse.success) {
         setRecord(mergedData);
       } else {
         console.error("Failed to fetch record:", response.message);

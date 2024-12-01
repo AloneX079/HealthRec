@@ -607,7 +607,6 @@ const upInsuranceInfo = asynchandler(async(req,res)=>{
     }
 })
 
-
 module.exports={
     getBasicInfo,
     getMedicalHistory,
