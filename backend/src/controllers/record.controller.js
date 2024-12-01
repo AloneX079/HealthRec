@@ -11,7 +11,7 @@ const getBasicInfo = asynchandler(async(req,res)=>{
     const user = req.user
     const basicInfo = await Record.findOne({
         pid:user._id
-    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritialStatus ethinicityRace smokingAlcohol')
+    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
     if(!basicInfo){
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l14")
     }

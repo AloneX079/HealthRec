@@ -13,6 +13,9 @@ function Footer() {
                                 className="mr-3 h-16"
                                 alt="Logo"
                             />
+                            <span className="text-xl font-bold text-gray-800 lg:hover:bg-transparent hover:text-green-700">
+                                HealthRec
+                            </span>
                         </Link>
                     </div>
                     <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">

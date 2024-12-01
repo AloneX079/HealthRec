@@ -6,9 +6,9 @@ import Home from "./pages/Home.jsx";
 import useUserContext from "./hooks/useUserContext.js";
 
 function App() {
-    const { user, setUser } = useUserContext();
+    const { user, setUser, loading, setLoading } = useUserContext();
     const { pathname } = useLocation();
-    const [loading, setLoading] = useState(true);
+
     // console.log(user);
     useEffect(() => {
         const auth = async () => {

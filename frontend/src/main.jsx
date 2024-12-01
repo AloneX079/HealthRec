@@ -1,32 +1,48 @@
-import React from 'react'
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import UContext from "./context/UContext.jsx";
 import "./index.css";
 import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import DoctorDash from "./pages/DoctorDash.jsx";
+import RecContext from "./context/RecContext.jsx";
+import PresContext from "./context/PresContext.jsx";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App />,
-        children: [
-            {
-                path: "/login",
-                element: <Login />,
-            },
-            {
-                path: "/register",
-                element: <Login />,
-            },
-        ],
-    },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Login />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/ddashboard",
+        element: <DoctorDash />,
+      },
+    ],
+  },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <UContext>
-      <RouterProvider router={router}/>
+      <RecContext>
+        <PresContext>
+          <RouterProvider router={router} />
+        </PresContext>
+      </RecContext>
     </UContext>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
