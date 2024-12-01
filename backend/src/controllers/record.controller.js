@@ -528,7 +528,8 @@ const upVisitHistory = asynchandler(async(req,res)=>{
     })
     if(!checkExists){
         const pres = await Presc.create({
-            doctor: req.user._id,
+            doctorid: req.user._id,
+            doctor: req.user.name,
             illness: illness,
             prescription: prescription
         })
