@@ -3,22 +3,22 @@ import Footer from "../components/Footer";
 import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
 import { getPatientList } from "../api/GET";
-import { getPatientRecordDoctor } from "../api/POST";
+import { getPatientPrescription } from "../api/POST";
 
 function PharmacistDash() {
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
   const [patientList, setPatientList] = useState([]);
   const { user, setUser, loading, setLoading } = useUserContext();
-  const rec = async () => {
-    await getPatientRecordDoctor("6738be4faeed09898fda0947");
-  };
-  rec();
 
   const fetchPatientList = async () => {
     try {
       const patientListResponse = await getPatientList();
       if (patientListResponse.data.success) {
         setPatientList(patientListResponse.data.data);
+        patientList.map((patient, index) => {
+          const patientpres = getPatientPrescription(patient.patient);
+          console.log(patientpres);
+        });
       } else {
         console.error(
           "Failed to fetch patient list:",

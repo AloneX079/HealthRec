@@ -28,8 +28,7 @@ router.route('/getemercont').get(verifyJWT,getEmergencyContact)
 router.route('/getvishist').get(verifyJWT,getVisitHistory)
 router.route('/getplist').get(verifyJWT,getPatientList)
 
-router.route('/getpresphar').get(verifyJWT,getPresPhar)
-
+router.route('/getpresphar').post(verifyJWT,getPresPhar)
 router.route('/upbasicinf').post(verifyJWT,upBasicInfo)
 router.route('/upmedhist').post(verifyJWT,upMedicalHistory)
 router.route('/upvitals').post(verifyJWT,upPatientVitals)
