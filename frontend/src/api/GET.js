@@ -130,9 +130,10 @@ export const getPatientRecordDoctor = async(patientid) => {
     try{
         const {data, status} = await axiosInstance.get('/reco/getdocbinf',{
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+                "Content-Type": "application/json"
             },
-            params: {patid:patientid}
+            params: {patid: patientid}
         })
         console.log(data,status)
     }

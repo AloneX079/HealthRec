@@ -127,7 +127,7 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     if(filteredUpdateData.maritalStatus && !maritalStatusRegex.test(filteredUpdateData.maritalStatus))
         throw new apierror(400,"Invalid Marital Status! ERR:record.controller.l128")
     if(filteredUpdateData.ethnicityRace && !raceRegex.test(filteredUpdateData.ethnicityRace))
-        throw new apierror(400,"Invalid Ethicity/Race! ERR:record.controller.l130")
+        throw new apierror(400,"Invalid Ethnicity/Race! ERR:record.controller.l130")
     if(filteredUpdateData.smokingAlcohol && !smokingAlcoholRegex.test(filteredUpdateData.smokingAlcohol))
         throw new apierror(400,"Invalid Smoking/Alcohol! ERR:record.controller.l132")
     if(filteredUpdateData.insuranceProvider && !fullNameRegex.test(filteredUpdateData.insuranceProvider))
@@ -265,8 +265,7 @@ const getPatientBasicInfo = asynchandler(async(req,res)=>{
     }
     const basicInfo = await Record.findOne({
         pid: patid
-    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethincityRace smokingAlcohol')
-    console.log(basicInfo)
+    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
     if(!basicInfo){
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
     }
