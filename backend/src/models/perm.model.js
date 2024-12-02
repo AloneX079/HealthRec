@@ -5,6 +5,9 @@ const permSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    patientName:{
+        type: String,
+    },
     doctor:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

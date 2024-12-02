@@ -5,15 +5,8 @@ import useUserContext from "../hooks/useUserContext";
 
 function DoctorDash() {
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
-  const [content, setContent] = useState(null);
+  const [patientList, setPatientList] = useState([]);
   const { user, setUser, loading, setLoading } = useUserContext();
-  // if(loading){
-  //   setContent({
-  //     "Doctor QR":
-
-  //   })
-  //   return (<div>Loading...</div>)
-  // }
   return (
     <section>
       <div className="w-screen h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">

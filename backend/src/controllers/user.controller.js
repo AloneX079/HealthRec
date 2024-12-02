@@ -144,6 +144,7 @@ const getDocQr = asynchandler(async(req, res) => {
         throw new apierror(400,"User is not a Doctor or Pharmacist! ERR:user.controller.l146")
     const createPerm = await Perm.create({
         patient: req.user._id,
+        patientName: req.user.name,
         doctor: doc._id
     })
     if(!createPerm)

@@ -238,7 +238,7 @@ const getPatientList = asynchandler(async(req,res)=>{
     }
     const patients = await Perm.find({
         doctor: user._id
-    }).select("patient")
+    }).select("patient patientName")
     if(!patients){
         throw new apierror(404,"No Patients Found! ERR:record.controller.l239")
     }
