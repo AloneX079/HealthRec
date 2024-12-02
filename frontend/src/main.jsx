@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import DoctorDash from "./pages/DoctorDash.jsx";
 import RecContext from "./context/RecContext.jsx";
 import PresContext from "./context/PresContext.jsx";
+import PharmacistDash from "./pages/PharmacistDash.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/ddashboard",
         element: <DoctorDash />,
+      },
+      {
+        path: "/pdashboard",
+        element: <PharmacistDash />,
       },
     ],
   },

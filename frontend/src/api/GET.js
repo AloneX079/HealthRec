@@ -125,3 +125,18 @@ export const getPatientList = async() => {
         return {success: false, message: error.message}
     }
 }
+
+export const getPatientRecordDoctor = async(patientid) => {
+    try{
+        const {data, status} = await axiosInstance.get('/reco/getdocbinf',{
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            params: {patid:patientid}
+        })
+        console.log(data,status)
+    }
+    catch(error){
+        return {success: false, message: error.message}
+    }
+}

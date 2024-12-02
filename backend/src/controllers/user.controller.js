@@ -142,6 +142,12 @@ const getDocQr = asynchandler(async(req, res) => {
         throw new apierror(404,"Doctor/Pharmacist not found! ERR:user.controller.l144")
     if(!doc.isDoctor && !doc.isPharmacist)
         throw new apierror(400,"User is not a Doctor or Pharmacist! ERR:user.controller.l146")
+    const PermExists = await Perm.findOne({
+        patient: req.user._id,
+        doctor: doc._id
+    })
+    if(PermExists)
+        throw new apierror(400,"Permission already exists! ERR:user.controller.l150")
     const createPerm = await Perm.create({
         patient: req.user._id,
         patientName: req.user.name,
