@@ -1,3 +1,5 @@
+[![Logo Image](https://i.imgur.com/gmpHmex.png)](https://healthrec.unstablehosting.co.in)
+
 HealthRec® is a free, open-source Health Record Management panel built with MERN Stack with Tailwind CSS.
 
 ## Project Members
