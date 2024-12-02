@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import Footer from "../components/Footer";
 import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
-import { getPatientList, getPatientRecordDoctor } from "../api/GET";
+import { getPatientList } from "../api/GET";
+import { getPatientRecordDoctor } from "../api/POST";
 
 function PharmacistDash() {
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
