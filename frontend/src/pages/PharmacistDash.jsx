@@ -9,7 +9,11 @@ function PharmacistDash() {
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
   const [patientList, setPatientList] = useState([]);
   const { user, setUser, loading, setLoading } = useUserContext();
-  getPatientRecordDoctor("6738be4faeed09898fda0947");
+  const rec = async () => {
+    await getPatientRecordDoctor("6738be4faeed09898fda0947");
+  };
+  rec();
+
   const fetchPatientList = async () => {
     try {
       const patientListResponse = await getPatientList();

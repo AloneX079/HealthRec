@@ -246,7 +246,7 @@ const getPatientList = asynchandler(async(req,res)=>{
         .json(new apiresponse(200,patients,"Patients Fetched Successfully!"))
 })
 
-const getPatientBasicInfo = asynchandler(async(req,res)=>{
+const getPatientInfo = asynchandler(async(req,res)=>{
     //Method for doctors to view patient's basic info
     const user = req.user
     if(!user.isDoctor){
@@ -265,147 +265,13 @@ const getPatientBasicInfo = asynchandler(async(req,res)=>{
     }
     const basicInfo = await Record.findOne({
         pid: patid
-    }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
+    })
+    // }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
     if(!basicInfo){
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
     }
     return res.status(200)
         .json(new apiresponse(200, basicInfo, "Basic Info Fetched Successfully!"))
-})
-
-const getPatientMedicalHistory = asynchandler(async(req,res)=>{
-    //Method for doctors to view patient's medical history
-    const {patid} = req.body
-    if(!patid){
-        throw new apierror(400,"Patient ID Required! ERR:record.controller.l277")
-    }
-    if(!req.user.isDoctor){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l280")
-    }
-    const checkPerm = await Perm.findOne({
-        doctor: req.user._id,
-        patient: patid
-    })
-    if(!checkPerm){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l287")
-    }
-    const medicalHistory = await Record.findOne({
-        pid: patid
-    }).select('medicalHistory familyMedicalHistory allergies immunizationHistory surgeriesUndergone')
-    if(!medicalHistory){
-        throw new apierror(404,"No Medical History Found! ERR:record.controller.l293")
-    }
-    return res.status(200)
-        .json(new apiresponse(200, medicalHistory, "Medical History Fetched Successfully!"))
-})
-
-const getPatientVitals = asynchandler(async(req,res)=>{
-    //Method for doctors to view patient's vitals
-    const {patid} = req.body
-    if(!patid){
-        throw new apierror(400,"Patient ID Required! ERR:record.controller.l303")
-    }
-    if(!req.user.isDoctor){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l306")
-    }
-    const checkPerm = await Perm.findOne({
-        doctor: req.user._id,
-        patient: patid
-    })
-    if(!checkPerm){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l313")
-    }
-    const vitals = await Record.findOne({
-        pid: patid
-    }).select('heightInCm weightInKg LastBloodPressureInMmHg LastHeartRateInBpm')
-    if(!vitals){
-        throw new apierror(404,"No Vitals Found! ERR:record.controller.l319")
-    }
-    return res.status(200)
-        .json(new apiresponse(200, vitals, "Vitals Fetched Successfully!"))
-})
-
-const getPatientInsuranceInfo = asynchandler(async(req,res)=>{
-    //Method for doctors to view patient's insurance info
-    const {patid} = req.body
-    if(!patid){
-        throw new apierror(400,"Patient ID Required! ERR:record.controller.l329")
-    }
-    if(!req.user.isDoctor){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l332")
-    }
-    const checkPerm = await Perm.findOne({
-        doctor: req.user._id,
-        patient: patid
-    })
-    if(!checkPerm){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l339")
-    }
-    const insuranceInfo = await Record.findOne({
-        pid: patid
-    }).select('insuranceProvider insurancePolicyNumber')
-    if(!insuranceInfo){
-        throw new apierror(404,"No Insurance Info Found! ERR:record.controller.l345")
-    }
-    return res.status(200)
-        .json(new apiresponse(200, insuranceInfo, "Insurance Info Fetched Successfully!"))
-})
-
-const getPatientEmergencyContact = asynchandler(async(req,res)=>{
-    //Method for doctors to view patient's emergency contact
-    const {patid} = req.body
-    if(!patid){
-        throw new apierror(400,"Patient ID Required! ERR:record.controller.l355")
-    }
-    if(!req.user.isDoctor){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l358")
-    }
-    const checkPerm = await Perm.findOne({
-        doctor: req.user._id,
-        patient: patid
-    })
-    if(!checkPerm){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l365")
-    }
-    const emergencyContact = await Record.findOne({
-        pid: patid
-    }).select('emergencyContactPhone')
-    if(!emergencyContact){
-        throw new apierror(404,"No Emergency Contact Found! ERR:record.controller.l371")
-    }
-    return res.status(200)
-        .json(new apiresponse(200, emergencyContact, "Emergency Contact Fetched Successfully!"))
-})
-
-const getPatientVisitHistory = asynchandler(async(req,res)=>{
-    //Method for doctors to view patient's visit history
-    const {patid} = req.body
-    if(!patid){
-        throw new apierror(400,"Patient ID Required! ERR:record.controller.l381")
-    }
-    if(!req.user.isDoctor){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l384")
-    }
-    const checkPerm = await Perm.findOne({
-        doctor: req.user._id,
-        patient: patid
-    })
-    if(!checkPerm){
-        throw new apierror(401,"Unauthorized Access! ERR:record.controller.l391")
-    }
-    const prescobjid = await Record.findOne({
-        pid: patid
-    }).select('visitHistory')
-    if(!prescobjid){
-        throw new apierror(404,"No Visit History Found! ERR:record.controller.l397")
-    }
-    const visitHistory = []
-    for(let i=0;i<prescobjid.visitHistory.length;i++){
-        const visit = await Presc.findById(prescobjid.visitHistory[i])
-        visitHistory.push(visit)
-    }
-    return res.status(200)
-        .json(new apiresponse(200, visitHistory, "Visit History Fetched Successfully!"))
 })
 
 const upPatientVitals = asynchandler(async (req,res)=>{
@@ -623,12 +489,7 @@ module.exports={
     upMedicalHistory,
     upPatientVitals,
     getPatientList,
-    getPatientBasicInfo,
-    getPatientMedicalHistory,
-    getPatientVitals,
-    getPatientInsuranceInfo,
-    getPatientEmergencyContact,
-    getPatientVisitHistory,
+    getPatientInfo,
     upEmergencyContact,
     upVisitHistory,
     getPresPhar,

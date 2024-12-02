@@ -41,12 +41,12 @@ router.route('/upvitals').post(verifyJWT,upPatientVitals)
 router.route('/upemercont').post(verifyJWT,upEmergencyContact)
 router.route('/upinsinfo').post(verifyJWT,upInsuranceInfo)
 router.route('/upvishist').post(verifyJWT,upVisitHistory)
-router.route('/getdocbinf').post(verifyJWT,getPatientBasicInfo)
-router.route('/getdocmedhist').post(verifyJWT,getPatientMedicalHistory)
-router.route('/getdocvitals').post(verifyJWT,getPatientVitals)
-router.route('/getdocinsinfo').post(verifyJWT,getPatientInsuranceInfo)
-router.route('/getdocemercont').post(verifyJWT,getPatientEmergencyContact)
-router.route('/getdocvishist').post(verifyJWT,getPatientVisitHistory)
+router.route('/getdocpinf').post(verifyJWT,getPatientInfo)
+// router.route('/getdocmedhist').post(verifyJWT,getPatientMedicalHistory)
+// router.route('/getdocvitals').post(verifyJWT,getPatientVitals)
+// router.route('/getdocinsinfo').post(verifyJWT,getPatientInsuranceInfo)
+// router.route('/getdocemercont').post(verifyJWT,getPatientEmergencyContact)
+// router.route('/getdocvishist').post(verifyJWT,getPatientVisitHistory)
 
 
 
