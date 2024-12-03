@@ -46,44 +46,40 @@ function PharmacistDash() {
   //This function made me cry fr
   const content = patientList.reduce((acc, patient) => {
     acc[patient.patientName] = (
-      <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="flex flex-col p-6 bg-white rounded-lg shadow-md w-full h-[95%]">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-green-900">
             Visit History
           </h2>
         </div>
-        <div className="space-y-4">
-          <div
-            className="h-80 overflow-y-auto border border-gray-300 rounded-lg p-6"
-            style={{ maxHeight: "256px" }}
-          >
-            {patientPrescription[patient.patient]?.data ? (
-              patientPrescription[patient.patient].data.map((item, index) => (
-                <div
-                  key={index}
-                  className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
-                >
-                  <p className="text-lg font-medium text-green-800">
-                    Doctor: <span className="text-gray-800">{item.doctor}</span>
-                  </p>
-                  <p className="text-lg font-medium text-green-800">
-                    Illness:{" "}
-                    <span className="text-gray-800">{item.illness}</span>
-                  </p>
-                  <p className="text-lg font-medium text-green-800">
-                    Prescription:{" "}
-                    <span className="text-gray-800">{item.prescription}</span>
-                  </p>
-                  <p className="text-lg font-medium text-green-800">
-                    Created At:{" "}
-                    <span className="text-gray-800">{item.createdAt}</span>
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-center text-gray-600">No records available.</p>
-            )}
-          </div>
+        {/* <div className="space-y-4"> */}
+        <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
+          {patientPrescription[patient.patient]?.data ? (
+            patientPrescription[patient.patient].data.map((item, index) => (
+              <div
+                key={index}
+                className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
+              >
+                <p className="text-lg font-medium text-green-800">
+                  Doctor: <span className="text-gray-800">{item.doctor}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Illness: <span className="text-gray-800">{item.illness}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Prescription:{" "}
+                  <span className="text-gray-800">{item.prescription}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Created At:{" "}
+                  <span className="text-gray-800">{item.createdAt}</span>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-600">No records available.</p>
+          )}
+          {/* </div> */}
         </div>
       </div>
     );
@@ -96,7 +92,7 @@ function PharmacistDash() {
 
   return (
     <section>
-      <div className="w-screen h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
         <div className="w-3/4 h-3/4 mt-10 bg-green-200 rounded-xl shadow-lg flex">
           <div className="w-1/4 bg-green-300 rounded-l-xl flex flex-col items-start px-5 py-3 gap-4 border-r-2 border-green-500">
             <h2 className="text-xl font-bold text-green-900 mb-4">
@@ -127,15 +123,15 @@ function PharmacistDash() {
             </ul>
           </div>
           <div className="w-3/4 p-3 flex items-center justify-center text-green-900">
-            <div className="text-lg font-medium w-3/4 h-2/4">
-              {selectedItem === "Doctor QR" ? (
+            {selectedItem === "Doctor QR" ? (
+              <div className="text-lg font-medium w-3/4 h-2/4">
                 <div className="flex flex-col items-center justify-center w-full h-full">
                   {loading ? (
                     "Loading..."
                   ) : (
                     <QRCode
                       style={{ height: "100%", width: "100%" }}
-                      value={user?._id||""}
+                      value={user?._id || ""}
                       bgColor={`#bbf7d1`}
                       viewBox={`0 0 256 256`}
                     />
@@ -147,10 +143,10 @@ function PharmacistDash() {
                     Refresh Patient List
                   </button>
                 </div>
-              ) : (
-                content[selectedItem]
-              )}
-            </div>
+              </div>
+            ) : (
+              content[selectedItem]
+            )}
           </div>
         </div>
       </div>

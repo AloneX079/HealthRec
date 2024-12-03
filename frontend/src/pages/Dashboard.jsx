@@ -536,7 +536,7 @@ function Dashboard() {
   }, [setRecord]);
   return (
     <section>
-      <div className="w-screen h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
+      <div className="h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
         <div className="w-3/4 h-3/4 mt-10 bg-green-200 rounded-xl shadow-lg flex">
           <div className="w-1/4 bg-green-300 rounded-l-xl flex flex-col items-start px-5 py-3 gap-4 border-r-2 border-green-500">
             <h2 className="text-xl font-bold text-green-900 mb-4">
