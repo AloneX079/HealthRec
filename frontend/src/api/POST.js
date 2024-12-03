@@ -13,7 +13,6 @@ export const getPatientRecordDoctor = async (patientid) => {
           }
         }
       );
-      console.log(data);
       if(status != 200){
         throw  new Error("Error while fetching data")
       }      
