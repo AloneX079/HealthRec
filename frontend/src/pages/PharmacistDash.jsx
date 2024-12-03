@@ -30,9 +30,7 @@ function PharmacistDash() {
             );
           }
         }
-
         setPatientPrescription(prescriptions);
-        console.log(patientPrescription);
       } else {
         console.error(
           "Failed to fetch patient list:",
@@ -137,7 +135,7 @@ function PharmacistDash() {
                   ) : (
                     <QRCode
                       style={{ height: "100%", width: "100%" }}
-                      value={user?._id}
+                      value={user?._id||""}
                       bgColor={`#bbf7d1`}
                       viewBox={`0 0 256 256`}
                     />
