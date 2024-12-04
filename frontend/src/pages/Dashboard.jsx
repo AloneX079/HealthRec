@@ -31,7 +31,6 @@ function Dashboard() {
     setRecord((prev) => ({ ...prev, [name]: value }));
   };
   const saveChanges = () => {
-    console.log(record);
     upUserDashboard(record);
     setIsEditing(false);
   };

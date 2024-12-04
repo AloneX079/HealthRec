@@ -3,7 +3,11 @@ import Footer from "../components/Footer";
 import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
 import { getPatientList } from "../api/GET";
-import { getPatientRecordDoctor, getPatientPrescription } from "../api/POST";
+import {
+  getPatientRecordDoctor,
+  getPatientPrescription,
+  upPatientPrescription,
+} from "../api/POST";
 import PatientBasicInfo from "../components/PatientBasicInfo";
 import { Plus } from "lucide-react";
 
@@ -18,6 +22,8 @@ function DoctorDash() {
   const handlePrescribeToggle = () => setPrescribing(!isPrescribing);
   const handleEditToggle = () => setIsEditing(!isEditing);
   const [patientPrescription, setPatientPrescription] = useState({});
+  const [upillness, setIllness] = useState("");
+  const [medicine, setMedicine] = useState("");
 
   const [newMedicalHistoryItem, setNewMedicalHistoryItem] = useState("");
   const [newFamilyMedicalHistoryItem, setNewFamilyMedicalHistoryItem] =
@@ -38,6 +44,15 @@ function DoctorDash() {
   const saveChanges = () => {
     // Call API to save changes or handle it locally
     setIsEditing(false);
+  };
+  const savePrescribeChanges = () => {
+    console.log(patientList);
+    // const payload = {
+    //   illness: upillness,
+    //   prescription: medicine,
+    // };
+    // upPatientPrescription(payload);
+    setPrescribing(false);
   };
 
   const fetchPatientList = async () => {
@@ -88,7 +103,6 @@ function DoctorDash() {
 
   const content = patientList.reduce((acc, patient) => {
     const patientData = patientRecord[patient.patient];
-
     if (patientData) {
       acc[patient.patientName] = (
         <div className="p-6 m-4  bg-white rounded-lg shadow-md w-full h-[95%] overflow-y-auto relative text-black">
@@ -104,7 +118,7 @@ function DoctorDash() {
             <div className="flex gap-2 ">
               {isPrescribing && (
                 <button
-                  onClick={saveChanges}
+                  onClick={savePrescribeChanges}
                   className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 >
                   Save Changes
@@ -130,7 +144,7 @@ function DoctorDash() {
               {isPrescribing ? (
                 <input
                   type="text"
-                  name="illness"
+                  name="upillness"
                   onChange={handleChange}
                   className="border rounded border-gray-300 px-2 py-1 w-2/5"
                 />
@@ -145,7 +159,7 @@ function DoctorDash() {
               {isPrescribing ? (
                 <input
                   type="text"
-                  name="prescription"
+                  name="medicine"
                   onChange={handleChange}
                   className="border border-gray-300 rounded px-2 py-1 w-2/5"
                 />
@@ -440,7 +454,7 @@ function DoctorDash() {
             />
             <PatientBasicInfo
               label="Secondary Responder Phone"
-              value={patientData?.secondaryrespondername || "N/A"}
+              value={patientData?.secondaryresponderphone || "N/A"}
             />
           </div>
           <div className="flex justify-between my-5">
