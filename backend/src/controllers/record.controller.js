@@ -299,17 +299,24 @@ const getPatientInfo = asynchandler(async(req,res)=>{
         pid: patid
     })
     // }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
+    if(!basicInfo){
+        throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
+    }
     const {
         primaryrespondername,
         primaryresponderphone,
         secondaryrespondername,
         secondaryresponderphone,
     } = basicInfo.emergencyContactPhone || {};
-    if(!basicInfo){
-        throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
-    }
+    const mergedInfo = {
+        ...basicInfo.toObject(), // Convert Mongoose document to plain JS object
+        primaryrespondername,
+        primaryresponderphone,
+        secondaryrespondername,
+        secondaryresponderphone,
+    };
     return res.status(200)
-        .json(new apiresponse(200,{primaryrespondername,primaryresponderphone,secondaryrespondername,secondaryresponderphone,basicInfo}, "Basic Info Fetched Successfully!"))
+        .json(new apiresponse(200,mergedInfo, "Basic Info Fetched Successfully!"))
 })
 
 const upPatientVitals = asynchandler(async (req,res)=>{
