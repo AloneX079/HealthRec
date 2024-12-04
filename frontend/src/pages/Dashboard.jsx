@@ -344,7 +344,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="fullName"
+                name="insuranceProvider"
                 value={record?.insuranceProvider}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -360,7 +360,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="fullName"
+                name="insurancePolicyNumber"
                 value={record?.insurancePolicyNumber}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -403,7 +403,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="fullName"
+                name="emergencyContactPhone"
                 value={record?.emergencyContactPhone[0]?.name}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -421,7 +421,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="fullName"
+                name="emergencyContactPhone"
                 value={record?.emergencyContactPhone[0]?.phone}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -439,7 +439,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone[1].name"
+                name="emergencyContactPhone"
                 value={record?.emergencyContactPhone[1]?.name}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -457,7 +457,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone[1].phone"
+                name="emergencyContactPhone"
                 value={record?.emergencyContactPhone[1]?.phone}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"

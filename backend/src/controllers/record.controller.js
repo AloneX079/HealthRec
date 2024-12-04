@@ -86,6 +86,7 @@ const getVisitHistory = asynchandler(async(req,res)=>{
 
 const upBasicInfo = asynchandler(async(req,res)=>{
     const user = req.user
+
     const updateData = {
         fullName: req.body.fullName || undefined,
         dateOfBirth: req.body.dateOfBirth || undefined,
@@ -99,7 +100,14 @@ const upBasicInfo = asynchandler(async(req,res)=>{
         insuranceProvider: req.body.insuranceProvider || undefined,
         insurancePolicyNumber: req.body.insurancePolicyNumber || undefined,
         heightInCm: req.body.heightInCm || undefined,
-        weightInKg: req.body.weightInKg || undefined
+        weightInKg: req.body.weightInKg || undefined,
+        emergencyContactPhone: {
+            ...(req.body.primaryrespondername && { primaryrespondername: req.body.primaryrespondername }),
+            ...(req.body.primaryresponderphone && { primaryresponderphone: req.body.primaryresponderphone }),
+            ...(req.body.secondaryrespondername && { secondaryrespondername: req.body.secondaryrespondername }),
+            ...(req.body.secondaryresponderphone && { secondaryresponderphone: req.body.secondaryresponderphone }),
+        }|| undefined
+        
     }
     console.log(updateData)
     const filteredUpdateData = Object.fromEntries(
@@ -117,6 +125,9 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     const smokingAlcoholRegex = /^(Smoke|Alcohol|Both|Clean)$/
     const heInCmRegex = /^\d{3}$/
     const weInKgRegex = /^\d{2,3}$/
+    const phoneRegex = /^\d{10}$/
+
+
     if(filteredUpdateData.fullName && !fullNameRegex.test(filteredUpdateData.fullName))
         throw new apierror(400,"Invalid Full Name! ERR:record.controller.l116")
     if(filteredUpdateData.dateOfBirth && !dateOfBirthRegex.test(filteredUpdateData.dateOfBirth))
@@ -147,6 +158,7 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     if(!checkExists){
         const record = await Record.create({
             ...filteredUpdateData,
+            
             pid: user._id
         });
         if(!record){
@@ -337,42 +349,42 @@ const upPatientVitals = asynchandler(async (req,res)=>{
     }
 })
 
-const upEmergencyContact = asynchandler(async(req,res)=>{
-    const user = req.user
-    const {uname,uphone} = req.body
-    if([uname,uphone].some((field)=>field===undefined|| typeof field !== 'string' || (field?.trim() === "")))
-        throw new apierror(400,"Invalid Emergency Contact! ERR:record.controller.l478")
-    const phoneRegex = /^\d{10}$/
-    if(!phoneRegex.test(uphone))
-        throw new apierror(400,"Invalid Phone Number! ERR:record.controller.l481")
-    const checkExists = await Record.findOne({
-        pid:user._id
-    })
-    if(!checkExists){
-        const record = await Record.create({
-            pid: user._id,
-            emergencyContactPhone: [{
-                name: uname,
-                phone: uphone
-            }]
-        })
-        return res.status(201)
-            .json(new apiresponse(201,record,"Emergency Contact Created Successfully!"))
-    }else{
-        const record = await Record.findOneAndUpdate({
-            pid:user._id
-        },{
-            $push: {
-                emergencyContactPhone: {
-                    name: uname,
-                    phone: uphone
-                }
-            }
-        },{new:true})
-        return res.status(200)
-            .json(new apiresponse(200,record,"Emergency Contact Updated Successfully!"))
-    }
-})
+// const upEmergencyContact = asynchandler(async(req,res)=>{
+//     const user = req.user
+//     const {uname,uphone} = req.body
+//     if([uname,uphone].some((field)=>field===undefined|| typeof field !== 'string' || (field?.trim() === "")))
+//         throw new apierror(400,"Invalid Emergency Contact! ERR:record.controller.l478")
+//     const phoneRegex = /^\d{10}$/
+//     if(!phoneRegex.test(uphone))
+//         throw new apierror(400,"Invalid Phone Number! ERR:record.controller.l481")
+//     const checkExists = await Record.findOne({
+//         pid:user._id
+//     })
+//     if(!checkExists){
+//         const record = await Record.create({
+//             pid: user._id,
+//             emergencyContactPhone: [{
+//                 name: uname,
+//                 phone: uphone
+//             }]
+//         })
+//         return res.status(201)
+//             .json(new apiresponse(201,record,"Emergency Contact Created Successfully!"))
+//     }else{
+//         const record = await Record.findOneAndUpdate({
+//             pid:user._id
+//         },{
+//             $push: {
+//                 emergencyContactPhone: {
+//                     name: uname,
+//                     phone: uphone
+//                 }
+//             }
+//         },{new:true})
+//         return res.status(200)
+//             .json(new apiresponse(200,record,"Emergency Contact Updated Successfully!"))
+//     }
+// })
 
 const upVisitHistory = asynchandler(async(req,res)=>{
     if(!req.user.isDoctor)
@@ -491,7 +503,6 @@ module.exports={
     upPatientVitals,
     getPatientList,
     getPatientInfo,
-    upEmergencyContact,
     upVisitHistory,
     getPresPhar,
 
