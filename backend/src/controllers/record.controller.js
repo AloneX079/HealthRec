@@ -98,6 +98,8 @@ const upBasicInfo = asynchandler(async(req,res)=>{
         smokingAlcohol: req.body.smokingAlcohol || undefined,
         insuranceProvider: req.body.insuranceProvider || undefined,
         insurancePolicyNumber: req.body.insurancePolicyNumber || undefined,
+        heightInCm: req.body.heightInCm || undefined,
+        weightInKg: req.body.weightInKg || undefined
     }
     console.log(updateData)
     const filteredUpdateData = Object.fromEntries(
@@ -113,6 +115,8 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     const maritalStatusRegex = /^(Single|Married|Divorced)$/
     const raceRegex = /^[a-zA-Z\s]{3,64}$/
     const smokingAlcoholRegex = /^(Smoke|Alcohol|Both|Clean)$/
+    const heInCmRegex = /^\d{3}$/
+    const weInKgRegex = /^\d{2,3}$/
     if(filteredUpdateData.fullName && !fullNameRegex.test(filteredUpdateData.fullName))
         throw new apierror(400,"Invalid Full Name! ERR:record.controller.l116")
     if(filteredUpdateData.dateOfBirth && !dateOfBirthRegex.test(filteredUpdateData.dateOfBirth))
@@ -133,6 +137,10 @@ const upBasicInfo = asynchandler(async(req,res)=>{
         throw new apierror(400,"Invalid Smoking/Alcohol! ERR:record.controller.l132")
     if(filteredUpdateData.insuranceProvider && !fullNameRegex.test(filteredUpdateData.insuranceProvider))
         throw new apierror(400,"Invalid Insurance Provider! ERR:record.controller.l134")
+    if(filteredUpdateData.heightInCm && !heInCmRegex.test(filteredUpdateData.heightInCm))
+        throw new apierror(400,"Invalid Height! ERR:record.controller.l136")
+    if(filteredUpdateData.weightInKg && !weInKgRegex.test(filteredUpdateData.weightInKg))
+        throw new apierror(400,"Invalid Weight! ERR:record.controller.l138")
     const checkExists = await Record.findOne({
         pid:user._id
     })
@@ -291,22 +299,14 @@ const upPatientVitals = asynchandler(async (req,res)=>{
     if(!checkPerm)
         throw new apierror(401,"Unauthorized Access! ERR:record.controller.l174")
     const updateData = {
-        heightInCm: req.body.heightInCm || undefined,
-        weightInKg: req.body.weightInKg || undefined,
         LastBloodPressureInMmHg: req.body.LastBloodPressureInMmHg || undefined,
         LastHeartRateInBpm: req.body.LastHeartRateInBpm || undefined
     }
     const filteredUpdateData = Object.fromEntries(
         Object.entries(updateData).filter(([key, value]) => value !== undefined)
     )
-    const heInCmRegex = /^\d{3}$/
-    const weInKgRegex = /^\d{2,3}$/
     const bpRegex = /^\d{2,3}\/\d{2,3}$/
     const hrRegex = /^\d{2,3}$/
-    if(filteredUpdateData.heightInCm && !heInCmRegex.test(filteredUpdateData.heightInCm))
-        throw new apierror(400,"Invalid Height! ERR:record.controller.l437")
-    if(filteredUpdateData.weightInKg && !weInKgRegex.test(filteredUpdateData.weightInKg))
-        throw new apierror(400,"Invalid Weight! ERR:record.controller.l439")
     if(filteredUpdateData.LastBloodPressureInMmHg && !bpRegex.test(filteredUpdateData.LastBloodPressureInMmHg))
         throw new apierror(400,"Invalid Blood Pressure! ERR:record.controller.l441")
     if(filteredUpdateData.LastHeartRateInBpm && !hrRegex.test(filteredUpdateData.LastHeartRateInBpm))
@@ -453,31 +453,31 @@ const getPresPhar = asynchandler(async(req,res)=>{
         .json(new apiresponse(200,prescs,"Prescriptions Fetched Successfully!"))
 })
 
-const upInsuranceInfo = asynchandler(async(req,res)=>{
-    const checkExists = await Record.findOne({
-        pid:req.user._id
-    })
-    if(!checkExists){
-        const record = await Record.create({
-            pid: req.user._id,
-            insuranceProvider: req.body.insuranceProvider,
-            insurancePolicyNumber: req.body.insurancePolicyNumber
-        })
-        return res.status(201)
-            .json(new apiresponse(201,record,"Insurance Updated Successfully!"))
-    }else{
-        const record = await Record.findOneAndUpdate({
-            pid:req.user._id
-        },{
-            insuranceProvider: req.body.insuranceProvider,
-            insurancePolicyNumber: req.body.insurancePolicyNumber
-        },{
-            new:true
-        })
-        return res.status(200)
-            .json(new apiresponse(200,record,"Insurance Updated Successfully!"))
-    }
-})
+// const upInsuranceInfo = asynchandler(async(req,res)=>{
+//     const checkExists = await Record.findOne({
+//         pid:req.user._id
+//     })
+//     if(!checkExists){
+//         const record = await Record.create({
+//             pid: req.user._id,
+//             insuranceProvider: req.body.insuranceProvider,
+//             insurancePolicyNumber: req.body.insurancePolicyNumber
+//         })
+//         return res.status(201)
+//             .json(new apiresponse(201,record,"Insurance Updated Successfully!"))
+//     }else{
+//         const record = await Record.findOneAndUpdate({
+//             pid:req.user._id
+//         },{
+//             insuranceProvider: req.body.insuranceProvider,
+//             insurancePolicyNumber: req.body.insurancePolicyNumber
+//         },{
+//             new:true
+//         })
+//         return res.status(200)
+//             .json(new apiresponse(200,record,"Insurance Updated Successfully!"))
+//     }
+// })
 
 module.exports={
     getBasicInfo,
@@ -494,5 +494,5 @@ module.exports={
     upEmergencyContact,
     upVisitHistory,
     getPresPhar,
-    upInsuranceInfo
+
 }

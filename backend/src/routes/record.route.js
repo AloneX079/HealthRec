@@ -33,7 +33,7 @@ router.route('/upbasicinf').post(verifyJWT,upBasicInfo)
 router.route('/upmedhist').post(verifyJWT,upMedicalHistory)
 router.route('/upvitals').post(verifyJWT,upPatientVitals)
 router.route('/upemercont').post(verifyJWT,upEmergencyContact)
-router.route('/upinsinfo').post(verifyJWT,upInsuranceInfo)
+
 router.route('/upvishist').post(verifyJWT,upVisitHistory)
 router.route('/getdocpinf').post(verifyJWT,getPatientInfo)
 // router.route('/getdocmedhist').post(verifyJWT,getPatientMedicalHistory)
@@ -41,7 +41,7 @@ router.route('/getdocpinf').post(verifyJWT,getPatientInfo)
 // router.route('/getdocinsinfo').post(verifyJWT,getPatientInsuranceInfo)
 // router.route('/getdocemercont').post(verifyJWT,getPatientEmergencyContact)
 // router.route('/getdocvishist').post(verifyJWT,getPatientVisitHistory)
-
+// router.route('/upinsinfo').post(verifyJWT,upInsuranceInfo)
 
 
 

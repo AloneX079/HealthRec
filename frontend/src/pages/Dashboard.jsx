@@ -135,7 +135,7 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="maritialStatus"
+                name="maritalStatus"
                 value={record?.maritalStatus}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
@@ -246,6 +246,16 @@ function Dashboard() {
             <span className="text-lg">{record?.LastHeartRateInBpm}</span>
           </div>
         </div>
+        {isEditing && (
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={saveChanges}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
       </div>
     ),
     "Medical History": (

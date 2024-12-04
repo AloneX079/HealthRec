@@ -49,8 +49,22 @@ export const getPatientRecordDoctor = async (patientid) => {
 
 export const upUserDashboard = async(record) => {
   try{
-    const { data, status } = await axiosInstance.post('/reco/upbasicinf', 
-    {record},
+    const { data, status } = await axiosInstance.post('/reco/upbasicinf', {
+      fullName:record.fullName,
+      fullName: record.fullName,
+      dateOfBirth: record.dateOfBirth,
+      gender: record.gender ,
+      bloodGroup: record.bloodGroup ,
+      phoneNumber: record.phoneNumber,
+      address: record.address ,
+      maritalStatus: record.maritalStatus,
+      ethnicityRace: record.ethnicityRace,
+      smokingAlcohol: record.smokingAlcohol,
+      insuranceProvider: record.insuranceProvider,
+      insurancePolicyNumber: record.insurancePolicyNumber,
+      heightInCm: record.heightInCm,
+      weightInKg: record.weightInKg
+    },
     {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
