@@ -114,7 +114,6 @@ const upBasicInfo = asynchandler(async(req,res)=>{
             ...(req.body.secondaryresponderphone && { secondaryresponderphone: req.body.secondaryresponderphone }),
         }|| undefined
     }
-    console.log(updateData)
     const filteredUpdateData = Object.fromEntries(
         Object.entries(updateData).filter(([key, value]) => value !== undefined)
     )
@@ -300,11 +299,17 @@ const getPatientInfo = asynchandler(async(req,res)=>{
         pid: patid
     })
     // }).select('fullName dateOfBirth gender bloodGroup phoneNumber address maritalStatus ethnicityRace smokingAlcohol')
+    const {
+        primaryrespondername,
+        primaryresponderphone,
+        secondaryrespondername,
+        secondaryresponderphone,
+    } = basicInfo.emergencyContactPhone || {};
     if(!basicInfo){
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
     }
     return res.status(200)
-        .json(new apiresponse(200, basicInfo, "Basic Info Fetched Successfully!"))
+        .json(new apiresponse(200,primaryrespondername,primaryresponderphone,secondaryrespondername,secondaryresponderphone, basicInfo, "Basic Info Fetched Successfully!"))
 })
 
 const upPatientVitals = asynchandler(async (req,res)=>{

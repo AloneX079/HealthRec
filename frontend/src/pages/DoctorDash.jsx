@@ -428,19 +428,19 @@ function DoctorDash() {
           <div className="flex flex-col gap-3">
             <PatientBasicInfo
               label="Primary Responder Name"
-              value={patientData?.emergencyContactPhone[0]?.name || "N/A"}
+              value={patientData?.primaryrespondername || "N/A"}
             />
             <PatientBasicInfo
               label="Primary Responder Phone"
-              value={patientData?.emergencyContactPhone[0]?.phone || "N/A"}
+              value={patientData?.primaryresponderphone || "N/A"}
             />
             <PatientBasicInfo
               label="Secondary Responder Name"
-              value={patientData?.emergencyContactPhone[1]?.name || "N/A"}
+              value={patientData?.secondaryrespondername || "N/A"}
             />
             <PatientBasicInfo
               label="Secondary Responder Phone"
-              value={patientData?.emergencyContactPhone[1]?.phone || "N/A"}
+              value={patientData?.secondaryrespondername || "N/A"}
             />
           </div>
           <div className="flex justify-between my-5">

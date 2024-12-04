@@ -403,15 +403,13 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="primary"
-                value={record?.emergencyContactPhone?.primaryName || ""}
-                onChange={handleObjectChange}
+                name="primaryrespondername"
+                value={record?.primaryrespondername || ""}
+                onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">
-                {record?.emergencyContactPhone[0]?.name}
-              </span>
+              <span className="text-lg">{record?.primaryrespondername}</span>
             )}
           </div>
           <div className="flex justify-between">
@@ -421,15 +419,13 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone"
-                value={record?.emergencyContactPhone[0]?.phone}
+                name="primaryresponderphone"
+                value={record?.primaryresponderphone}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">
-                {record?.emergencyContactPhone[0]?.phone}
-              </span>
+              <span className="text-lg">{record?.primaryresponderphone}</span>
             )}
           </div>
           <div className="flex justify-between">
@@ -439,15 +435,13 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone"
-                value={record?.emergencyContactPhone[1]?.name}
+                name="secondaryrespondername"
+                value={record?.secondaryrespondername}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">
-                {record?.emergencyContactPhone[1]?.name}
-              </span>
+              <span className="text-lg">{record?.secondaryrespondername}</span>
             )}
           </div>
           <div className="flex justify-between">
@@ -457,15 +451,13 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone"
-                value={record?.emergencyContactPhone[1]?.phone}
+                name="secondaryresponderphone"
+                value={record?.secondaryresponderphone}
                 onChange={handleChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (
-              <span className="text-lg">
-                {record?.emergencyContactPhone[1]?.phone}
-              </span>
+              <span className="text-lg">{record?.secondaryresponderphone}</span>
             )}
           </div>
         </div>

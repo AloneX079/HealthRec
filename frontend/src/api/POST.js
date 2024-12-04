@@ -63,7 +63,11 @@ export const upUserDashboard = async(record) => {
       insuranceProvider: record.insuranceProvider,
       insurancePolicyNumber: record.insurancePolicyNumber,
       heightInCm: record.heightInCm,
-      weightInKg: record.weightInKg
+      weightInKg: record.weightInKg,
+      primaryrespondername: record.primaryrespondername,
+      primaryresponderphone: record.primaryresponderphone,
+      secondaryrespondername: record.secondaryrespondername,
+      secondaryresponderphone: record.secondaryresponderphone
     },
     {
       headers: {
