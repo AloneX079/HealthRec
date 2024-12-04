@@ -403,9 +403,9 @@ function Dashboard() {
             {isEditing ? (
               <input
                 type="text"
-                name="emergencyContactPhone"
-                value={record?.emergencyContactPhone[0]?.name}
-                onChange={handleChange}
+                name="primary"
+                value={record?.emergencyContactPhone?.primaryName || ""}
+                onChange={handleObjectChange}
                 className="border border-gray-300 rounded px-2 py-1 w-3/5"
               />
             ) : (

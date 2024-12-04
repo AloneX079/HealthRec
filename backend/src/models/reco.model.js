@@ -62,12 +62,8 @@ const recordSchema = new mongoose.Schema({
         type:String
     },
     emergencyContactPhone:{
-        type:{
-            primaryrespondername: { type: String },
-            primaryresponderphone: { type: Number },
-            secondaryrespondername: { type: String },
-            secondaryresponderphone: { type: Number }
-          }
+        type:Object,
+        default: {}
     },
     insuranceProvider:{
         type:String
