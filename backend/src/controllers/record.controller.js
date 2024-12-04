@@ -63,8 +63,14 @@ const getEmergencyContact = asynchandler(async(req,res)=>{
     if(!emergencyContact){
         throw new apierror(404,"No Emergency Contact Found! ERR:record.controller.l62")
     }
+    const {
+        primaryrespondername,
+        primaryresponderphone,
+        secondaryrespondername,
+        secondaryresponderphone,
+    } = emergencyContact.emergencyContactPhone || {};
     return res.status(200)
-        .json(new apiresponse(200, emergencyContact, "Emergency Contact Fetched Successfully!"))
+        .json(new apiresponse(200, {primaryrespondername,primaryresponderphone,secondaryrespondername,secondaryresponderphone}, "Emergency Contact Fetched Successfully!"))
 })
 
 const getVisitHistory = asynchandler(async(req,res)=>{
@@ -107,7 +113,6 @@ const upBasicInfo = asynchandler(async(req,res)=>{
             ...(req.body.secondaryrespondername && { secondaryrespondername: req.body.secondaryrespondername }),
             ...(req.body.secondaryresponderphone && { secondaryresponderphone: req.body.secondaryresponderphone }),
         }|| undefined
-        
     }
     console.log(updateData)
     const filteredUpdateData = Object.fromEntries(
@@ -127,7 +132,14 @@ const upBasicInfo = asynchandler(async(req,res)=>{
     const weInKgRegex = /^\d{2,3}$/
     const phoneRegex = /^\d{10}$/
 
-
+    if(filteredUpdateData.primaryrespondername && !fullNameRegex.test(filteredUpdateData.primaryrespondername))
+        throw new apierror(400,"Invalid Primary Responder Name! ERR:record.controller.l116")
+    if(filteredUpdateData.primaryresponderphone && !phoneRegex.test(filteredUpdateData.primaryresponderphone))
+        throw new apierror(400,"Invalid Primary Responder Phone Number! ERR:record.controller.l118")
+    if(filteredUpdateData.secondaryrespondername && !fullNameRegex.test(filteredUpdateData.secondaryrespondername))
+        throw new apierror(400,"Invalid Secondary Responder Name! ERR:record.controller.l120")
+    if(filteredUpdateData.secondaryresponderphone && !phoneRegex.test(filteredUpdateData.secondaryresponderphone))
+        throw new apierror(400,"Invalid Secondary Responder Phone Number! ERR:record.controller.l122")
     if(filteredUpdateData.fullName && !fullNameRegex.test(filteredUpdateData.fullName))
         throw new apierror(400,"Invalid Full Name! ERR:record.controller.l116")
     if(filteredUpdateData.dateOfBirth && !dateOfBirthRegex.test(filteredUpdateData.dateOfBirth))

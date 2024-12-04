@@ -10,9 +10,7 @@ const{
     upPatientVitals,
     getPatientList,
     getPatientInfo,
-    upEmergencyContact,
     getPresPhar,
-    upInsuranceInfo,
     upVisitHistory
 }= require('../controllers/record.controller.js');
 const {verifyJWT} = require('../middlewares/auth.mw.js')
