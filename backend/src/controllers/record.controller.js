@@ -309,7 +309,7 @@ const getPatientInfo = asynchandler(async(req,res)=>{
         throw new apierror(404,"No Basic Info Found! ERR:record.controller.l267")
     }
     return res.status(200)
-        .json(new apiresponse(200,primaryrespondername,primaryresponderphone,secondaryrespondername,secondaryresponderphone, basicInfo, "Basic Info Fetched Successfully!"))
+        .json(new apiresponse(200,{primaryrespondername,primaryresponderphone,secondaryrespondername,secondaryresponderphone,basicInfo}, "Basic Info Fetched Successfully!"))
 })
 
 const upPatientVitals = asynchandler(async (req,res)=>{
