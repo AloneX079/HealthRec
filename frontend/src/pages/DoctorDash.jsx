@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
 import { getPatientList } from "../api/GET";
-import { getPatientRecordDoctor } from "../api/POST";
+import { getPatientRecordDoctor, getPatientPrescription } from "../api/POST";
 
 function DoctorDash() {
   // const [selectedPatient, setSelectedPatient] = useState(null);
@@ -15,23 +15,18 @@ function DoctorDash() {
   const [isPrescribing, setPrescribing] = useState(false);
   const handlePrescribeToggle = () => setPrescribing(!isPrescribing);
   const handleEditToggle = () => setIsEditing(!isEditing);
+  const [patientPrescription, setPatientPrescription] = useState({});
 
-  const [medicalHistory, setMedicalHistory] = useState([]);
-  const [familyMedicalHistory, setFamilyMedicalHistory] = useState([]);
-  const [allergies, setAllergies] = useState([]);
-  const [immunizationHistory, setImmunizationHistory] = useState([]);
-  const [surgeriesUndergone, setSurgeriesUndergone] = useState([]);
-  const handleArrayChange = (array, setArray, index, event) => {
-    const updatedArray = [...array];
-    updatedArray[index] = event.target.value;
-    setArray(updatedArray);
-  };
-  const handleAddItem = (array, setArray) => {
-    setArray([...array, ""]);
-  };
-  const handleRemoveItem = (array, setArray, index) => {
-    const updatedArray = array.filter((_, i) => i !== index);
-    setArray(updatedArray);
+  const [newMedicalHistoryItem, setNewMedicalHistoryItem] = useState("");
+  const [newFamilyMedicalHistoryItem, setNewFamilyMedicalHistoryItem] =
+    useState("");
+  const [newAllergy, setNewAllergy] = useState("");
+  const [newImmunization, setNewImmunization] = useState("");
+  const [newSurgery, setNewSurgery] = useState("");
+
+  const handleAddItem = (array, setArray, value) => {
+    if (!value.trim()) return;
+    setArray([...array, value.trim()]);
   };
 
   const handleChange = (e) => {
@@ -51,6 +46,7 @@ function DoctorDash() {
         const fetchedPatientList = patientListResponse.data.data;
         setPatientList(fetchedPatientList);
         const patientData = {};
+        const prescriptions = {};
 
         for (const patient of fetchedPatientList) {
           const patientRec = await getPatientRecordDoctor(patient.patient);
@@ -60,6 +56,17 @@ function DoctorDash() {
             console.error(`Failed to fetch prescription for ${patient.data}`);
           }
         }
+        for (const patient of fetchedPatientList) {
+          const patientpres = await getPatientPrescription(patient.patient);
+          if (patientpres.success && patientpres.data) {
+            prescriptions[patient.patient] = patientpres.data;
+          } else {
+            console.error(
+              `Failed to fetch prescription for ${patient.patient}`
+            );
+          }
+        }
+        setPatientPrescription(prescriptions);
         setPatientRecord(patientData);
       } else {
         console.error(
@@ -251,245 +258,217 @@ function DoctorDash() {
                 <h3 className="text-xl font-medium text-green-900">
                   Medical History
                 </h3>
-                {isEditing ? (
-                  patientData.medicalHistory.map((item, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            medicalHistory,
-                            setMedicalHistory,
-                            index,
-                            e
-                          )
-                        }
-                        className="border border-gray-300 rounded px-2 py-1 w-full"
-                      />
-                      <button
-                        onClick={() =>
-                          handleRemoveItem(
-                            medicalHistory,
-                            setMedicalHistory,
-                            index
-                          )
-                        }
-                        className="ml-2 text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-lg">
-                    {patientData.medicalHistory.join(", ")}
-                  </span>
-                )}
-                {isEditing && (
-                  <button
-                    onClick={() =>
-                      handleAddItem(medicalHistory, setMedicalHistory)
-                    }
-                    className="mt-2 text-blue-500"
-                  >
-                    Add Item
-                  </button>
-                )}
+                {patientData.medicalHistory.map((item, index) => (
+                  <div key={index} className="text-lg mb-2">
+                    {item}
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  value={newMedicalHistoryItem}
+                  onChange={(e) => setNewMedicalHistoryItem(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
+                  placeholder="Add new medical history item"
+                />
+                <button
+                  onClick={() =>
+                    handleAddItem(medicalHistory, setMedicalHistory)
+                  }
+                  className="mt-2 text-blue-500"
+                >
+                  Add Item
+                </button>
               </div>
               <div className="mb-4">
                 <h3 className="text-xl font-medium text-green-900">
                   Family Medical History
                 </h3>
-                {isEditing ? (
-                  patientData.familyMedicalHistory.map((item, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            familyMedicalHistory,
-                            setFamilyMedicalHistory,
-                            index,
-                            e
-                          )
-                        }
-                        className="border border-gray-300 rounded px-2 py-1 w-full"
-                      />
-                      <button
-                        onClick={() =>
-                          handleRemoveItem(
-                            familyMedicalHistory,
-                            setFamilyMedicalHistory,
-                            index
-                          )
-                        }
-                        className="ml-2 text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-lg">
-                    {patientData.familyMedicalHistory.join(", ")}
-                  </span>
-                )}
-                {isEditing && (
-                  <button
-                    onClick={() =>
-                      handleAddItem(
-                        familyMedicalHistory,
-                        setFamilyMedicalHistory
-                      )
-                    }
-                    className="mt-2 text-blue-500"
-                  >
-                    Add Item
-                  </button>
-                )}
+                {patientData.familyMedicalHistory.map((item, index) => (
+                  <div key={index} className="text-lg mb-2">
+                    {item}
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  value={newFamilyMedicalHistoryItem}
+                  onChange={(e) =>
+                    setNewFamilyMedicalHistoryItem(e.target.value)
+                  }
+                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
+                  placeholder="Add new family medical history item"
+                />
+                <button
+                  onClick={() =>
+                    handleAddItem(familyMedicalHistory, setFamilyMedicalHistory)
+                  }
+                  className="mt-2 text-blue-500"
+                >
+                  Add Item
+                </button>
               </div>
               <div className="mb-4">
                 <h3 className="text-xl font-medium text-green-900">
                   Allergies
                 </h3>
-                {isEditing ? (
-                  patientData.allergies.map((item, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) =>
-                          handleArrayChange(allergies, setAllergies, index, e)
-                        }
-                        className="border border-gray-300 rounded px-2 py-1 w-full"
-                      />
-                      <button
-                        onClick={() =>
-                          handleRemoveItem(allergies, setAllergies, index)
-                        }
-                        className="ml-2 text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-lg">
-                    {patientData.allergies.join(", ")}
-                  </span>
-                )}
-                {isEditing && (
-                  <button
-                    onClick={() => handleAddItem(allergies, setAllergies)}
-                    className="mt-2 text-blue-500"
-                  >
-                    Add Item
-                  </button>
-                )}
+                {patientData.allergies.map((item, index) => (
+                  <div key={index} className="text-lg mb-2">
+                    {item}
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  value={newAllergy}
+                  onChange={(e) => setNewAllergy(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
+                  placeholder="Add new allergy"
+                />
+                <button
+                  onClick={() => handleAddItem(allergies, setAllergies)}
+                  className="mt-2 text-blue-500"
+                >
+                  Add Item
+                </button>
               </div>
               <div className="mb-4">
                 <h3 className="text-xl font-medium text-green-900">
                   Immunization History
                 </h3>
-                {isEditing ? (
-                  patientData.immunizationHistory.map((item, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            immunizationHistory,
-                            setImmunizationHistory,
-                            index,
-                            e
-                          )
-                        }
-                        className="border border-gray-300 rounded px-2 py-1 w-full"
-                      />
-                      <button
-                        onClick={() =>
-                          handleRemoveItem(
-                            immunizationHistory,
-                            setImmunizationHistory,
-                            index
-                          )
-                        }
-                        className="ml-2 text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-lg">
-                    {patientData.immunizationHistory.join(", ")}
-                  </span>
-                )}
-                {isEditing && (
-                  <button
-                    onClick={() =>
-                      handleAddItem(immunizationHistory, setImmunizationHistory)
-                    }
-                    className="mt-2 text-blue-500"
-                  >
-                    Add Item
-                  </button>
-                )}
+                {patientData.immunizationHistory.map((item, index) => (
+                  <div key={index} className="text-lg mb-2">
+                    {item}
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  value={newImmunization}
+                  onChange={(e) => setNewImmunization(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
+                  placeholder="Add new immunization"
+                />
+                <button
+                  onClick={() =>
+                    handleAddItem(immunizationHistory, setImmunizationHistory)
+                  }
+                  className="mt-2 text-blue-500"
+                >
+                  Add Item
+                </button>
               </div>
               <div className="mb-4">
                 <h3 className="text-xl font-medium text-green-900">
                   Surgeries Undergone
                 </h3>
-                {isEditing ? (
-                  patientData.surgeriesUndergone.map((item, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            surgeriesUndergone,
-                            setSurgeriesUndergone,
-                            index,
-                            e
-                          )
-                        }
-                        className="border border-gray-300 rounded px-2 py-1 w-full"
-                      />
-                      <button
-                        onClick={() =>
-                          handleRemoveItem(
-                            surgeriesUndergone,
-                            setSurgeriesUndergone,
-                            index
-                          )
-                        }
-                        className="ml-2 text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-lg">
-                    {patientData.surgeriesUndergone.join(", ")}
-                  </span>
-                )}
-                {isEditing && (
-                  <button
-                    onClick={() =>
-                      handleAddItem(surgeriesUndergone, setSurgeriesUndergone)
-                    }
-                    className="mt-2 text-blue-500"
-                  >
-                    Add Item
-                  </button>
-                )}
+                {patientData.surgeriesUndergone.map((item, index) => (
+                  <div key={index} className="text-lg mb-2">
+                    {item}
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  value={newSurgery}
+                  onChange={(e) => setNewSurgery(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
+                  placeholder="Add new surgery"
+                />
+                <button
+                  onClick={() =>
+                    handleAddItem(surgeriesUndergone, setSurgeriesUndergone)
+                  }
+                  className="mt-2 text-blue-500"
+                >
+                  Add Item
+                </button>
               </div>
             </div>
+          </div>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold text-green-900">
+              {[patient.patientName]}'s Emergency Contacts
+            </h2>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Primary Responder Name :
+            </span>
+            <span className="text-lg">
+              {patientData?.emergencyContactPhone[0]?.name}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Primary Responder Phone :
+            </span>
+            <span className="text-lg">
+              {patientData?.emergencyContactPhone[0]?.phone}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Secondary Responder Name :
+            </span>
+            <span className="text-lg">
+              {patientData?.emergencyContactPhone[1]?.name}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Secondary Responder Phone :
+            </span>
+            <span className="text-lg">
+              {patientData?.emergencyContactPhone[1]?.phone}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold text-green-900">
+              {[patient.patientName]}'s Insurance Details
+            </h2>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Insurance Provider :
+            </span>
+            <span className="text-lg">{patientData?.insuranceProvider}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-medium text-green-800">
+              Insurance Policy Number :
+            </span>
+            <span className="text-lg">
+              {patientData?.insurancePolicyNumber}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold text-green-900">
+              {[patient.patientName]}'s Visit History
+            </h2>
+          </div>
+          <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
+            {patientPrescription[patient.patient]?.data ? (
+              patientPrescription[patient.patient].data.map((item, index) => (
+                <div
+                  key={index}
+                  className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
+                >
+                  <p className="text-lg font-medium text-green-800">
+                    Doctor: <span className="text-gray-800">{item.doctor}</span>
+                  </p>
+                  <p className="text-lg font-medium text-green-800">
+                    Illness:{" "}
+                    <span className="text-gray-800">{item.illness}</span>
+                  </p>
+                  <p className="text-lg font-medium text-green-800">
+                    Prescription:{" "}
+                    <span className="text-gray-800">{item.prescription}</span>
+                  </p>
+                  <p className="text-lg font-medium text-green-800">
+                    Created At:{" "}
+                    <span className="text-gray-800">{item.createdAt}</span>
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-600">No records available.</p>
+            )}
           </div>
         </div>
       );
