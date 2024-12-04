@@ -99,6 +99,7 @@ const upBasicInfo = asynchandler(async(req,res)=>{
         insuranceProvider: req.body.insuranceProvider || undefined,
         insurancePolicyNumber: req.body.insurancePolicyNumber || undefined,
     }
+    console.log(updateData)
     const filteredUpdateData = Object.fromEntries(
         Object.entries(updateData).filter(([key, value]) => value !== undefined)
     )

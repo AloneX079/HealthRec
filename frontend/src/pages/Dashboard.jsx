@@ -8,6 +8,7 @@ import {
   getEmergencyContact,
   getVisitHistory,
 } from "../api/GET";
+import { upUserDashboard } from "../api/POST";
 import useRecContext from "../hooks/useRecContext";
 import usePresContext from "../hooks/usePresContext";
 import {
@@ -30,7 +31,8 @@ function Dashboard() {
     setRecord((prev) => ({ ...prev, [name]: value }));
   };
   const saveChanges = () => {
-    // Call API to save changes or handle it locally
+    console.log(record);
+    upUserDashboard(record);
     setIsEditing(false);
   };
   const content = {

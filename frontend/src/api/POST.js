@@ -46,4 +46,26 @@ export const getPatientRecordDoctor = async (patientid) => {
       return { success: false, message: error.message };
     }
   }
+
+export const upUserDashboard = async(record) => {
+  try{
+    const { data, status } = await axiosInstance.post('/reco/upbasicinf', 
+    {record},
+    {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem('accessToken')}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if(status != 200){
+      throw  new Error("Error while sending data data")
+    }
+    return { success: true, data: data };
+    }
+    catch(error){
+      console.error(error.message);
+    return { success: false, message: error.message };
+  }
+}
+
   

@@ -4,6 +4,8 @@ import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
 import { getPatientList } from "../api/GET";
 import { getPatientRecordDoctor, getPatientPrescription } from "../api/POST";
+import PatientBasicInfo from "../components/PatientBasicInfo";
+import { Plus } from "lucide-react";
 
 function DoctorDash() {
   // const [selectedPatient, setSelectedPatient] = useState(null);
@@ -89,17 +91,36 @@ function DoctorDash() {
 
     if (patientData) {
       acc[patient.patientName] = (
-        <div className="p-6 m-4  bg-white rounded-lg shadow-md w-full h-[95%] overflow-y-auto">
+        <div className="p-6 m-4  bg-white rounded-lg shadow-md w-full h-[95%] overflow-y-auto relative text-black">
+          <div className="px-4 py-3 flex justify-between mb-5 sticky top-0 bg-green-200/60 backdrop-blur-md rounded-2xl">
+            <h2 className="text-3xl font-bold text-green-900">
+              {[patient.patientName]}
+            </h2>
+          </div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold text-green-900">
               Prescribe Medication
             </h2>
-            <button
-              onClick={handlePrescribeToggle}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              {isPrescribing ? "Add" : "Prescribe"}
-            </button>
+            <div className="flex gap-2 ">
+              {isPrescribing && (
+                <button
+                  onClick={saveChanges}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Save Changes
+                </button>
+              )}
+              <button
+                onClick={handlePrescribeToggle}
+                className={`text-white px-4 py-2 rounded  ${
+                  isPrescribing
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-green-500 hover:bg-green-600"
+                }`}
+              >
+                {isPrescribing ? "Cancel" : "Prescribe"}
+              </button>
+            </div>
           </div>
           <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm">
             <div className="flex justify-between">
@@ -111,7 +132,7 @@ function DoctorDash() {
                   type="text"
                   name="illness"
                   onChange={handleChange}
-                  className="border border-gray-300 rounded px-2 py-1 w-3/5"
+                  className="border rounded border-gray-300 px-2 py-1 w-2/5"
                 />
               ) : (
                 <span className="text-lg">{}</span>
@@ -126,143 +147,133 @@ function DoctorDash() {
                   type="text"
                   name="prescription"
                   onChange={handleChange}
-                  className="border border-gray-300 rounded px-2 py-1 w-3/5"
+                  className="border border-gray-300 rounded px-2 py-1 w-2/5"
                 />
               ) : (
                 <span className="text-lg">{}</span>
               )}
             </div>
           </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Demographics
-            </h2>
+          <div className="flex justify-between mb-5">
+            <h2 className="text-3xl font-bold text-green-900">Demographics</h2>
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Full Name :
-            </span>
-            <span className="text-lg">{patientData?.fullName}</span>
+          <div className="flex flex-col items-start gap-3 mb-4">
+            <PatientBasicInfo label="Full Name" value={patientData?.fullName} />
+            <PatientBasicInfo label="Gender" value={patientData?.gender} />
+            <PatientBasicInfo
+              label="Blood Group"
+              value={patientData?.bloodGroup}
+            />
+            <PatientBasicInfo
+              label="Smoking / Alcohol"
+              value={patientData?.smokingAlcohol}
+            />
+            <PatientBasicInfo
+              label="Date of Birth"
+              value={patientData?.dateOfBirth}
+            />
+            <PatientBasicInfo
+              label="Phone Number"
+              value={patientData?.phoneNumber}
+            />
+            <PatientBasicInfo label="Address" value={patientData?.address} />
+            <PatientBasicInfo
+              label="Ethnicity / Race"
+              value={patientData?.ethnicityRace}
+            />
+            <PatientBasicInfo
+              label="Marital Status"
+              value={patientData?.maritalStatus}
+            />
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">Gender :</span>
-            <span className="text-lg">{patientData?.gender}</span>
+          <div className="flex justify-between mb-5">
+            <h2 className="text-3xl font-bold text-green-900">Vitals</h2>
+            <div className="flex gap-2 ">
+              {isEditing && (
+                <button
+                  onClick={saveChanges}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Save Changes
+                </button>
+              )}
+              <button
+                onClick={handleEditToggle}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              >
+                {isEditing ? "Cancel" : "Edit"}
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Blood Group :
-            </span>
-            <span className="text-lg">{patientData?.bloodGroup}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Smoking / Alcohol :
-            </span>
-            <span className="text-lg">{patientData?.smokingAlcohol}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Date of Birth :
-            </span>
-            <span className="text-lg">{patientData?.dateOfBirth}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Phone Number :
-            </span>
-            <span className="text-lg">{patientData?.phoneNumber}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Address :
-            </span>
-            <span className="text-lg">{patientData?.address}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Ethnicity / Race :
-            </span>
-            <span className="text-lg">{patientData?.ethnicityRace}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Marital Status :
-            </span>
-            <span className="text-lg">{patientData?.maritalStatus}</span>
-          </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Vitals
-            </h2>
-            <button
-              onClick={handleEditToggle}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              {isEditing ? "Cancel" : "Edit"}
-            </button>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Height (cm):
-            </span>
-            <span className="text-lg">{patientData?.heightInCm}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Weight (kg):
-            </span>
-            <span className="text-lg">{patientData?.weightInKg}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Last Blood Pressure (MmHg):
-            </span>
-            {isEditing ? (
-              <input
-                type="text"
-                name="LastBloodPressureInMmHg"
-                value={patientData?.LastBloodPressureInMmHg}
-                onChange={handleChange}
-                className="border border-gray-300 rounded px-2 py-1 w-3/5"
-              />
-            ) : (
-              <span className="text-lg">
-                {patientData?.LastBloodPressureInMmHg}
+          <div className="flex justify-between flex-col gap-3">
+            <PatientBasicInfo
+              label="Height (cm)"
+              value={patientData?.heightInCm}
+              isEditing={false}
+            />
+            <PatientBasicInfo
+              label="Weight (kg)"
+              value={patientData?.weightInKg}
+              isEditing={false}
+            />
+            <div className="flex justify-between">
+              <span className="text-lg font-medium text-green-800">
+                Last Blood Pressure (MmHg):
               </span>
-            )}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="LastBloodPressureInMmHg"
+                  value={patientData?.LastBloodPressureInMmHg}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-lg px-2 py-1"
+                />
+              ) : (
+                <span className="text-lg font-semibold">
+                  {patientData?.LastBloodPressureInMmHg}
+                </span>
+              )}
+            </div>
+            <div className="flex justify-between">
+              <span className="text-lg font-medium text-green-800 rounded-lg">
+                Last Heart Rate (Bpm):
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="LastHeartRateInBpm"
+                  value={patientData?.LastHeartRateInBpm}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded px-2 py-1"
+                />
+              ) : (
+                <span className="text-lg font-semibold">
+                  {patientData?.LastHeartRateInBpm}
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Last Heart Rate (Bpm):
-            </span>
-            {isEditing ? (
-              <input
-                type="text"
-                name="LastHeartRateInBpm"
-                value={patientData?.LastHeartRateInBpm}
-                onChange={handleChange}
-                className="border border-gray-300 rounded px-2 py-1 w-3/5"
-              />
-            ) : (
-              <span className="text-lg">{patientData?.LastHeartRateInBpm}</span>
-            )}
-          </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Medical History
+          <div className="flex justify-between my-5">
+            <h2 className="text-3xl font-bold text-green-900">
+              Patient's Records
             </h2>
           </div>
-          <div className="flex justify-between">
-            <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm">
-              <div className="mb-4">
-                <h3 className="text-xl font-medium text-green-900">
-                  Medical History
-                </h3>
+          <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm w-full">
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold text-green-900">
+                Medical History
+              </h3>
+              <div className="flex w-full flex-wrap gap-3 items-start my-3">
                 {patientData.medicalHistory.map((item, index) => (
-                  <div key={index} className="text-lg mb-2">
+                  <div
+                    key={index}
+                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                  >
                     {item}
                   </div>
                 ))}
+              </div>
+              <div className="flex w-full gap-2 justify-center items-center">
                 <input
                   type="text"
                   value={newMedicalHistoryItem}
@@ -274,20 +285,27 @@ function DoctorDash() {
                   onClick={() =>
                     handleAddItem(medicalHistory, setMedicalHistory)
                   }
-                  className="mt-2 text-blue-500"
+                  className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
-                  Add Item
+                  <Plus />
                 </button>
               </div>
-              <div className="mb-4">
-                <h3 className="text-xl font-medium text-green-900">
-                  Family Medical History
-                </h3>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold text-green-900">
+                Family Medical History
+              </h3>
+              <div className="flex w-full flex-wrap gap-3 items-start my-3">
                 {patientData.familyMedicalHistory.map((item, index) => (
-                  <div key={index} className="text-lg mb-2">
+                  <div
+                    key={index}
+                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                  >
                     {item}
                   </div>
                 ))}
+              </div>
+              <div className="flex w-full gap-2 justify-center items-center">
                 <input
                   type="text"
                   value={newFamilyMedicalHistoryItem}
@@ -301,20 +319,27 @@ function DoctorDash() {
                   onClick={() =>
                     handleAddItem(familyMedicalHistory, setFamilyMedicalHistory)
                   }
-                  className="mt-2 text-blue-500"
+                  className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
-                  Add Item
+                  <Plus />
                 </button>
               </div>
-              <div className="mb-4">
-                <h3 className="text-xl font-medium text-green-900">
-                  Allergies
-                </h3>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold text-green-900">
+                Allergies
+              </h3>
+              <div className="flex w-full flex-wrap gap-3 items-start my-3">
                 {patientData.allergies.map((item, index) => (
-                  <div key={index} className="text-lg mb-2">
+                  <div
+                    key={index}
+                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                  >
                     {item}
                   </div>
                 ))}
+              </div>
+              <div className="flex w-full gap-2 justify-center items-center">
                 <input
                   type="text"
                   value={newAllergy}
@@ -324,20 +349,27 @@ function DoctorDash() {
                 />
                 <button
                   onClick={() => handleAddItem(allergies, setAllergies)}
-                  className="mt-2 text-blue-500"
+                  className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
-                  Add Item
+                  <Plus />
                 </button>
               </div>
-              <div className="mb-4">
-                <h3 className="text-xl font-medium text-green-900">
-                  Immunization History
-                </h3>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold text-green-900">
+                Immunization History
+              </h3>
+              <div className="flex w-full flex-wrap gap-3 items-start my-3">
                 {patientData.immunizationHistory.map((item, index) => (
-                  <div key={index} className="text-lg mb-2">
+                  <div
+                    key={index}
+                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                  >
                     {item}
                   </div>
                 ))}
+              </div>
+              <div className="flex w-full gap-2 justify-center items-center">
                 <input
                   type="text"
                   value={newImmunization}
@@ -349,20 +381,27 @@ function DoctorDash() {
                   onClick={() =>
                     handleAddItem(immunizationHistory, setImmunizationHistory)
                   }
-                  className="mt-2 text-blue-500"
+                  className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
-                  Add Item
+                  <Plus />
                 </button>
               </div>
-              <div className="mb-4">
-                <h3 className="text-xl font-medium text-green-900">
-                  Surgeries Undergone
-                </h3>
+            </div>
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold text-green-900">
+                Surgeries Undergone
+              </h3>
+              <div className="flex w-full flex-wrap gap-3 items-start my-3">
                 {patientData.surgeriesUndergone.map((item, index) => (
-                  <div key={index} className="text-lg mb-2">
+                  <div
+                    key={index}
+                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                  >
                     {item}
                   </div>
                 ))}
+              </div>
+              <div className="flex w-full gap-2 justify-center items-center">
                 <input
                   type="text"
                   value={newSurgery}
@@ -374,73 +413,53 @@ function DoctorDash() {
                   onClick={() =>
                     handleAddItem(surgeriesUndergone, setSurgeriesUndergone)
                   }
-                  className="mt-2 text-blue-500"
+                  className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
-                  Add Item
+                  <Plus />
                 </button>
               </div>
             </div>
           </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Emergency Contacts
+          <div className="flex justify-between my-5">
+            <h2 className="text-3xl font-bold text-green-900">
+              Emergency Contacts
             </h2>
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Primary Responder Name :
-            </span>
-            <span className="text-lg">
-              {patientData?.emergencyContactPhone[0]?.name}
-            </span>
+          <div className="flex flex-col gap-3">
+            <PatientBasicInfo
+              label="Primary Responder Name"
+              value={patientData?.emergencyContactPhone[0]?.name || "N/A"}
+            />
+            <PatientBasicInfo
+              label="Primary Responder Phone"
+              value={patientData?.emergencyContactPhone[0]?.phone || "N/A"}
+            />
+            <PatientBasicInfo
+              label="Secondary Responder Name"
+              value={patientData?.emergencyContactPhone[1]?.name || "N/A"}
+            />
+            <PatientBasicInfo
+              label="Secondary Responder Phone"
+              value={patientData?.emergencyContactPhone[1]?.phone || "N/A"}
+            />
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Primary Responder Phone :
-            </span>
-            <span className="text-lg">
-              {patientData?.emergencyContactPhone[0]?.phone}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Secondary Responder Name :
-            </span>
-            <span className="text-lg">
-              {patientData?.emergencyContactPhone[1]?.name}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Secondary Responder Phone :
-            </span>
-            <span className="text-lg">
-              {patientData?.emergencyContactPhone[1]?.phone}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Insurance Details
+          <div className="flex justify-between my-5">
+            <h2 className="text-3xl font-bold text-green-900">
+              Insurance Details
             </h2>
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Insurance Provider :
-            </span>
-            <span className="text-lg">{patientData?.insuranceProvider}</span>
+          <div className="flex flex-col gap-3">
+            <PatientBasicInfo
+              label="Insurance Provider"
+              value={patientData?.insuranceProvider || "N/A"}
+            />
+            <PatientBasicInfo
+              label="Insurance Policy Number"
+              value={patientData?.insurancePolicyNumber || "N/A"}
+            />
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-medium text-green-800">
-              Insurance Policy Number :
-            </span>
-            <span className="text-lg">
-              {patientData?.insurancePolicyNumber}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-semibold text-green-900">
-              {[patient.patientName]}'s Visit History
-            </h2>
+          <div className="flex justify-between my-5">
+            <h2 className="text-3xl font-bold text-green-900">Visit History</h2>
           </div>
           <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
             {patientPrescription[patient.patient]?.data ? (
