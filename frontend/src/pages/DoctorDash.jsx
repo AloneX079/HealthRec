@@ -7,6 +7,8 @@ import {
   getPatientRecordDoctor,
   getPatientPrescription,
   upPatientPrescription,
+  upPatientRecordDoctor,
+  upPatientMedicalHistory,
 } from "../api/POST";
 import PatientBasicInfo from "../components/PatientBasicInfo";
 import { Plus } from "lucide-react";
@@ -32,35 +34,78 @@ function DoctorDash() {
   const [newImmunization, setNewImmunization] = useState("");
   const [newSurgery, setNewSurgery] = useState("");
 
-  const handleAddItem = (array, setArray, value) => {
-    if (!value.trim()) return;
-    setArray([...array, value.trim()]);
+  const handleAddItem = (patientId, category, newItem) => {
+    if (!newItem.trim()) return;
+    const currentCategoryList = patientRecord[patientId][category];
+    const updatedCategoryList = [...currentCategoryList, newItem.trim()];
+    setPatientRecord((prev) => ({
+      ...prev,
+      [patientId]: {
+        ...prev[patientId],
+        [category]: updatedCategoryList,
+      },
+    }));
+    const payload = {
+      patid: patientId,
+      medicalHistory: patientRecord[patientId].medicalHistory,
+      familyMedicalHistory: patientRecord[patientId].familyMedicalHistory,
+      allergies: patientRecord[patientId].allergies,
+      immunizationHistory: patientRecord[patientId].immunizationHistory,
+      surgeriesHistory: patientRecord[patientId].surgeriesHistory,
+    };
+    upPatientMedicalHistory(payload)
+      .then((response) => {
+        if (response.success) {
+          console.log("Patient medical data updated successfully.");
+        } else {
+          console.error(
+            "Error updating patient medical data:",
+            response.message
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error while sending data:", error);
+      });
+    setNewMedicalHistoryItem("");
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e, patientId) => {
     const { name, value } = e.target;
-    setRecord((prev) => ({ ...prev, [name]: value }));
+    setPatientRecord((prev) => ({
+      ...prev,
+      [patientId]: {
+        ...prev[patientId],
+        [name]: value,
+      },
+    }));
   };
 
   const handleIllnessChange = (e) => {
-    setIllness(e.target.value)
-  }
+    setIllness(e.target.value);
+  };
 
   const handleMedicineChange = (e) => {
-    setMedicine(e.target.value)
+    setMedicine(e.target.value);
   };
   const saveChanges = () => {
-    // Call API to save changes or handle it locally
+    let patientid = selectedItem;
+    const payload = {
+      patid: patientid,
+      LastBloodPressureInMmHg: patientRecord[patientid].LastBloodPressureInMmHg,
+      LastHeartRateInBpm: patientRecord[patientid].LastHeartRateInBpm,
+    };
+    console.log(payload);
+    upPatientRecordDoctor(payload);
     setIsEditing(false);
   };
   const savePrescribeChanges = () => {
-    let patientid = selectedItem
+    let patientid = selectedItem;
     const payload = {
       patid: patientid,
       illness: upillness,
       prescription: medicine,
     };
-    console.log(payload)
     upPatientPrescription(payload);
     setPrescribing(false);
   };
@@ -249,7 +294,7 @@ function DoctorDash() {
                   type="text"
                   name="LastBloodPressureInMmHg"
                   value={patientData?.LastBloodPressureInMmHg}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, patient.patient)}
                   className="border border-gray-300 rounded-lg px-2 py-1"
                 />
               ) : (
@@ -259,7 +304,7 @@ function DoctorDash() {
               )}
             </div>
             <div className="flex justify-between">
-              <span className="text-lg font-medium text-green-800 rounded-lg">
+              <span className="text-lg font-medium text-green-800">
                 Last Heart Rate (Bpm):
               </span>
               {isEditing ? (
@@ -267,7 +312,7 @@ function DoctorDash() {
                   type="text"
                   name="LastHeartRateInBpm"
                   value={patientData?.LastHeartRateInBpm}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, patient.patient)}
                   className="border border-gray-300 rounded px-2 py-1"
                 />
               ) : (
@@ -288,14 +333,15 @@ function DoctorDash() {
                 Medical History
               </h3>
               <div className="flex w-full flex-wrap gap-3 items-start my-3">
-                {patientData.medicalHistory.map((item, index) => (
-                  <div
-                    key={index}
-                    className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
-                  >
-                    {item}
-                  </div>
-                ))}
+                {patientData.medicalHistory &&
+                  patientData.medicalHistory.map((item, index) => (
+                    <div
+                      key={index}
+                      className="text-base mb-2 bg-green-900 text-white rounded-xl font-semibold p-2"
+                    >
+                      {item}
+                    </div>
+                  ))}
               </div>
               <div className="flex w-full gap-2 justify-center items-center">
                 <input
@@ -307,7 +353,11 @@ function DoctorDash() {
                 />
                 <button
                   onClick={() =>
-                    handleAddItem(medicalHistory, setMedicalHistory)
+                    handleAddItem(
+                      patient.patient,
+                      "medicalHistory",
+                      newMedicalHistoryItem
+                    )
                   }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
@@ -341,7 +391,11 @@ function DoctorDash() {
                 />
                 <button
                   onClick={() =>
-                    handleAddItem(familyMedicalHistory, setFamilyMedicalHistory)
+                    handleAddItem(
+                      patient.patient,
+                      "familyMedicalHistory",
+                      newFamilyMedicalHistoryItem
+                    )
                   }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
@@ -372,7 +426,7 @@ function DoctorDash() {
                   placeholder="Add new allergy"
                 />
                 <button
-                  onClick={() => handleAddItem(allergies, setAllergies)}
+                  onClick={() => handleAddItem(patient.patient, newAllergy)}
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
                   <Plus />
@@ -403,7 +457,7 @@ function DoctorDash() {
                 />
                 <button
                   onClick={() =>
-                    handleAddItem(immunizationHistory, setImmunizationHistory)
+                    handleAddItem(patient.patient, newImmunization)
                   }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
@@ -434,9 +488,7 @@ function DoctorDash() {
                   placeholder="Add new surgery"
                 />
                 <button
-                  onClick={() =>
-                    handleAddItem(surgeriesUndergone, setSurgeriesUndergone)
-                  }
+                  onClick={() => handleAddItem(patient.patient, newSurgery)}
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
                   <Plus />
@@ -493,7 +545,8 @@ function DoctorDash() {
                   className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
                 >
                   <p className="text-lg font-medium text-green-800">
-                    Doctor: <span className="text-gray-800">{item?.doctor}</span>
+                    Doctor:{" "}
+                    <span className="text-gray-800">{item?.doctor}</span>
                   </p>
                   <p className="text-lg font-medium text-green-800">
                     Illness:{" "}

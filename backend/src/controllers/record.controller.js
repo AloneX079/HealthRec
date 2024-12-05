@@ -357,44 +357,44 @@ const upMedicalHistory = asynchandler(async (req, res) => {
   const filteredUpdateData = Object.fromEntries(
     Object.entries(updateData).filter(([key, value]) => value !== undefined)
   );
-  const basicRegex = /^[a-zA-Z\s]{3,64}$/;
-  if (
-    filteredUpdateData.medicalHistory &&
-    !basicRegex.test(filteredUpdateData.medicalHistory)
-  )
-    throw new apierror(
-      400,
-      "Invalid Medical History! ERR:record.controller.l187"
-    );
-  if (
-    filteredUpdateData.familyMedicalHistory &&
-    !basicRegex.test(filteredUpdateData.familyMedicalHistory)
-  )
-    throw new apierror(
-      400,
-      "Invalid Family Medical History! ERR:record.controller.l189"
-    );
-  if (
-    filteredUpdateData.allergies &&
-    !basicRegex.test(filteredUpdateData.allergies)
-  )
-    throw new apierror(400, "Invalid Allergies! ERR:record.controller.l191");
-  if (
-    filteredUpdateData.immunizationHistory &&
-    !basicRegex.test(filteredUpdateData.immunizationHistory)
-  )
-    throw new apierror(
-      400,
-      "Invalid Immunization History! ERR:record.controller.l193"
-    );
-  if (
-    filteredUpdateData.surgeriesUndergone &&
-    !basicRegex.test(filteredUpdateData.surgeriesUndergone)
-  )
-    throw new apierror(
-      400,
-      "Invalid Surgeries Undergone! ERR:record.controller.l195"
-    );
+  // const basicRegex = /^[a-zA-Z\s]{3,64}$/;
+  // if (
+  //   filteredUpdateData.medicalHistory &&
+  //   !basicRegex.test(filteredUpdateData.medicalHistory)
+  // )
+  //   throw new apierror(
+  //     400,
+  //     "Invalid Medical History! ERR:record.controller.l187"
+  //   );
+  // if (
+  //   filteredUpdateData.familyMedicalHistory &&
+  //   !basicRegex.test(filteredUpdateData.familyMedicalHistory)
+  // )
+  //   throw new apierror(
+  //     400,
+  //     "Invalid Family Medical History! ERR:record.controller.l189"
+  //   );
+  // if (
+  //   filteredUpdateData.allergies &&
+  //   !basicRegex.test(filteredUpdateData.allergies)
+  // )
+  //   throw new apierror(400, "Invalid Allergies! ERR:record.controller.l191");
+  // if (
+  //   filteredUpdateData.immunizationHistory &&
+  //   !basicRegex.test(filteredUpdateData.immunizationHistory)
+  // )
+  //   throw new apierror(
+  //     400,
+  //     "Invalid Immunization History! ERR:record.controller.l193"
+  //   );
+  // if (
+  //   filteredUpdateData.surgeriesUndergone &&
+  //   !basicRegex.test(filteredUpdateData.surgeriesUndergone)
+  // )
+  //   throw new apierror(
+  //     400,
+  //     "Invalid Surgeries Undergone! ERR:record.controller.l195"
+  //   );
   const checkExists = await Record.findOne({
     pid: user._id,
   });
