@@ -462,7 +462,7 @@ const upVisitHistory = asynchandler(async(req,res)=>{
 })
 
 const getPresPhar = asynchandler(async(req,res)=>{
-    if(!req.user.isPharmacist)
+    if(!req.user.isPharmacist || !req.user.isDoctor)
         throw new apierror(401,"Unauthorized Access! ERR:record.controller.l565")
     const {patid} = req.body
     if(!patid || typeof patid !== 'string' || patid.trim() === "" )
