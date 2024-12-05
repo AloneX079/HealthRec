@@ -41,17 +41,27 @@ function DoctorDash() {
     const { name, value } = e.target;
     setRecord((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleIllnessChange = (e) => {
+    setIllness(e.target.value)
+  }
+
+  const handleMedicineChange = (e) => {
+    setMedicine(e.target.value)
+  };
   const saveChanges = () => {
     // Call API to save changes or handle it locally
     setIsEditing(false);
   };
   const savePrescribeChanges = () => {
-    console.log(patientList);
-    // const payload = {
-    //   illness: upillness,
-    //   prescription: medicine,
-    // };
-    // upPatientPrescription(payload);
+    let patientid = selectedItem
+    const payload = {
+      patid: patientid,
+      illness: upillness,
+      prescription: medicine,
+    };
+    console.log(payload)
+    upPatientPrescription(payload);
     setPrescribing(false);
   };
 
@@ -104,7 +114,7 @@ function DoctorDash() {
   const content = patientList.reduce((acc, patient) => {
     const patientData = patientRecord[patient.patient];
     if (patientData) {
-      acc[patient.patientName] = (
+      acc[patient.patient] = (
         <div className="p-6 m-4  bg-white rounded-lg shadow-md w-full h-[95%] overflow-y-auto relative text-black">
           <div className="px-4 py-3 flex justify-between mb-5 sticky top-0 bg-green-200/60 backdrop-blur-md rounded-2xl">
             <h2 className="text-3xl font-bold text-green-900">
@@ -144,8 +154,8 @@ function DoctorDash() {
               {isPrescribing ? (
                 <input
                   type="text"
-                  name="upillness"
-                  onChange={handleChange}
+                  name="illness"
+                  onChange={handleIllnessChange}
                   className="border rounded border-gray-300 px-2 py-1 w-2/5"
                 />
               ) : (
@@ -160,7 +170,7 @@ function DoctorDash() {
                 <input
                   type="text"
                   name="medicine"
-                  onChange={handleChange}
+                  onChange={handleMedicineChange}
                   className="border border-gray-300 rounded px-2 py-1 w-2/5"
                 />
               ) : (
@@ -477,25 +487,25 @@ function DoctorDash() {
           </div>
           <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
             {patientPrescription[patient.patient]?.data ? (
-              patientPrescription[patient.patient].data.map((item, index) => (
+              patientPrescription[patient.patient]?.data.map((item, index) => (
                 <div
                   key={index}
                   className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
                 >
                   <p className="text-lg font-medium text-green-800">
-                    Doctor: <span className="text-gray-800">{item.doctor}</span>
+                    Doctor: <span className="text-gray-800">{item?.doctor}</span>
                   </p>
                   <p className="text-lg font-medium text-green-800">
                     Illness:{" "}
-                    <span className="text-gray-800">{item.illness}</span>
+                    <span className="text-gray-800">{item?.illness}</span>
                   </p>
                   <p className="text-lg font-medium text-green-800">
                     Prescription:{" "}
-                    <span className="text-gray-800">{item.prescription}</span>
+                    <span className="text-gray-800">{item?.prescription}</span>
                   </p>
                   <p className="text-lg font-medium text-green-800">
                     Created At:{" "}
-                    <span className="text-gray-800">{item.createdAt}</span>
+                    <span className="text-gray-800">{item?.createdAt}</span>
                   </p>
                 </div>
               ))
@@ -536,7 +546,7 @@ function DoctorDash() {
               {patientList.map((patient, index) => (
                 <li
                   key={index}
-                  onClick={() => setSelectedItem(patient.patientName)}
+                  onClick={() => setSelectedItem(patient.patient)}
                   className={`cursor-pointer px-4 py-3 text-lg font-medium text-green-800 hover:bg-green-400 duration-300 hover:text-white rounded-xl ${
                     selectedItem === patient?.patientName
                       ? "bg-green-500 text-white"
