@@ -265,7 +265,7 @@ const upMedicalHistory = asynchandler(async(req,res)=>{
 const getPatientList = asynchandler(async(req,res)=>{
     //This method is for Doctor who wants to see patient info linked to him
     const user = req.user
-    if(!user.isDoctor || !user.isPharmacist){
+    if(!(user.isDoctor || user.isPharmacist)){
         throw new apierror(401,"Unauthorized Access! ERR:record.controller.l233")
     }
     const patients = await Perm.find({
@@ -462,6 +462,9 @@ const upVisitHistory = asynchandler(async(req,res)=>{
 })
 
 const getPresPhar = asynchandler(async(req,res)=>{
+    const user = req.user
+    if(!(user.isDoctor || user.isPharmacist))
+
     if(!req.user.isPharmacist || !req.user.isDoctor)
         throw new apierror(401,"Unauthorized Access! ERR:record.controller.l565")
     const {patid} = req.body
@@ -485,6 +488,8 @@ const getPresPhar = asynchandler(async(req,res)=>{
             prescs.push(presc)
         }
     }
+    if(prescs.length<1)
+        throw new apierror(404,"No Prescriptions Exists")
     return res.status(200)
         .json(new apiresponse(200,prescs,"Prescriptions Fetched Successfully!"))
 })

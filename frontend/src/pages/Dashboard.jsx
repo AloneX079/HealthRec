@@ -490,18 +490,18 @@ function Dashboard() {
                 className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
               >
                 <p className="text-lg font-medium text-green-800">
-                  Doctor: <span className="text-gray-800">{item.doctor}</span>
+                  Doctor: <span className="text-gray-800">{item?.doctor}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
-                  Illness: <span className="text-gray-800">{item.illness}</span>
+                  Illness: <span className="text-gray-800">{item?.illness}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Prescription:{" "}
-                  <span className="text-gray-800">{item.prescription}</span>
+                  <span className="text-gray-800">{item?.prescription}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Created At:{" "}
-                  <span className="text-gray-800">{item.createdAt}</span>
+                  <span className="text-gray-800">{item?.createdAt}</span>
                 </p>
               </div>
             ))}

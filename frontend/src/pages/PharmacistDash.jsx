@@ -45,7 +45,7 @@ function PharmacistDash() {
   };
   //This function made me cry fr
   const content = patientList.reduce((acc, patient) => {
-    acc[patient.patientName] = (
+    acc[patient.patient] = (
       <div className="flex flex-col p-6 bg-white rounded-lg shadow-md w-full h-[95%]">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-green-900">
@@ -55,24 +55,24 @@ function PharmacistDash() {
         {/* <div className="space-y-4"> */}
         <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
           {patientPrescription[patient.patient]?.data ? (
-            patientPrescription[patient.patient].data.map((item, index) => (
+            patientPrescription[patient.patient]?.data.map((item, index) => (
               <div
                 key={index}
                 className="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm"
               >
                 <p className="text-lg font-medium text-green-800">
-                  Doctor: <span className="text-gray-800">{item.doctor}</span>
+                  Doctor: <span className="text-gray-800">{item?.doctor}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
-                  Illness: <span className="text-gray-800">{item.illness}</span>
+                  Illness: <span className="text-gray-800">{item?.illness}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Prescription:{" "}
-                  <span className="text-gray-800">{item.prescription}</span>
+                  <span className="text-gray-800">{item?.prescription}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Created At:{" "}
-                  <span className="text-gray-800">{item.createdAt}</span>
+                  <span className="text-gray-800">{item?.createdAt}</span>
                 </p>
               </div>
             ))
@@ -110,7 +110,7 @@ function PharmacistDash() {
               {patientList?.map((patient, index) => (
                 <li
                   key={index}
-                  onClick={() => setSelectedItem(patient?.patientName)}
+                  onClick={() => setSelectedItem(patient?.patient)}
                   className={`cursor-pointer px-4 py-3 text-lg font-medium text-green-800 hover:bg-green-400 duration-300 hover:text-white rounded-xl ${
                     selectedItem === patient?.patientName
                       ? "bg-green-500 text-white"
