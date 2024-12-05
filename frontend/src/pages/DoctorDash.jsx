@@ -12,6 +12,8 @@ import {
 } from "../api/POST";
 import PatientBasicInfo from "../components/PatientBasicInfo";
 import { Plus } from "lucide-react";
+import ErrorText from "../components/ErrorText";
+import { useNavigate } from "react-router-dom";
 
 function DoctorDash() {
   // const [selectedPatient, setSelectedPatient] = useState(null);
@@ -26,7 +28,13 @@ function DoctorDash() {
   const [patientPrescription, setPatientPrescription] = useState({});
   const [upillness, setIllness] = useState("");
   const [medicine, setMedicine] = useState("");
+  const navigate = useNavigate();
 
+  const initialError = {
+    status: false,
+    message: "",
+  };
+  const [error, setError] = useState(initialError);
   const [newMedicalHistoryItem, setNewMedicalHistoryItem] = useState("");
   const [newFamilyMedicalHistoryItem, setNewFamilyMedicalHistoryItem] =
     useState("");
@@ -146,8 +154,13 @@ function DoctorDash() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchPatientList();
+    if (!user?.isDoctor) {
+      setError({ status: true, message: "Unauthorized" });
+      navigate("/dashboard", { replace: true });
+    }
   }, []);
 
   const content = patientList.reduce((acc, patient) => {
@@ -170,7 +183,7 @@ function DoctorDash() {
                   onClick={savePrescribeChanges}
                   className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 >
-                  Save Changes
+                  Prescribe
                 </button>
               )}
               <button
@@ -587,7 +600,8 @@ function DoctorDash() {
 
   return (
     <section>
-      <div className="h-screen bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
+      <div className="h-screen flex-col bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
+        {error.status === true ? <ErrorText text={error.message} /> : null}
         <div className="w-3/4 h-3/4 mt-10 bg-green-200 rounded-xl shadow-lg flex ">
           <div className="w-1/4 bg-green-300 rounded-l-xl flex flex-col items-start px-5 py-3 gap-4 border-r-2 border-green-500">
             <h2 className="text-xl font-bold text-green-900 mb-4">

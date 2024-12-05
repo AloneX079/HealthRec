@@ -4,13 +4,19 @@ import QRCode from "react-qr-code";
 import useUserContext from "../hooks/useUserContext";
 import { getPatientList } from "../api/GET";
 import { getPatientPrescription } from "../api/POST";
+import { useNavigate } from "react-router-dom";
 
 function PharmacistDash() {
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
   const [patientList, setPatientList] = useState([]);
   const [patientPrescription, setPatientPrescription] = useState({});
   const { user, loading, setLoading } = useUserContext();
-
+  const navigate = useNavigate();
+  const initialError = {
+    status: false,
+    message: "",
+  };
+  const [error, setError] = useState(initialError);
   const fetchPatientList = async () => {
     try {
       setLoading(true);
@@ -64,7 +70,8 @@ function PharmacistDash() {
                   Doctor: <span className="text-gray-800">{item?.doctor}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
-                  Illness: <span className="text-gray-800">{item?.illness}</span>
+                  Illness:{" "}
+                  <span className="text-gray-800">{item?.illness}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Prescription:{" "}
@@ -88,6 +95,10 @@ function PharmacistDash() {
 
   useEffect(() => {
     fetchPatientList();
+    if (!user?.isPharmacist) {
+      setError({ status: true, message: "Unauthorized" });
+      navigate("/dashboard", { replace: true });
+    }
   }, []);
 
   return (

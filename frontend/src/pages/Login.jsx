@@ -33,7 +33,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const loginResponse = await login(logInCredentials);
-    if (loginResponse.status == false) {
+    if (loginResponse.success == false) {
       return setError({ status: true, message: loginResponse.message });
     }
     localStorage.setItem("accessToken", loginResponse.userData["accessToken"]);
@@ -45,9 +45,8 @@ const Login = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     const registerResponse = await register(logInCredentials);
-
     if (registerResponse.success == false) {
-      return setError({ status: true, message: registerResponse.message.data });
+      return setError({ status: true, message: registerResponse.message });
     }
     localStorage.setItem(
       "accessToken",
@@ -59,9 +58,9 @@ const Login = () => {
   };
   return (
     <section className="w-full flex flex-col justify-start items-center">
-      <div className="w-full flex-box flex-col h-full justify-center items-center">
-        <div className="col-span-1 w-full h-screen flex flex-col p-5 gap-5 bg-green-100 shadow-inner drop-shadow-lg text-center">
-          <Form className="border-green-200 flex-box flex-col">
+      <div className="w-full flex flex-col h-full justify-center items-center bg-green-100">
+        <div className="w-3/4 h-screen flex flex-col p-5 gap-5 text-center">
+          <Form className="flex flex-col">
             <h1 className="text-[4rem] font-bold bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white via-green-600 to-green-950 bg-clip-text text-transparent">
               {pathname === "/register" ? "SignUp" : "Login"}
             </h1>
@@ -135,9 +134,6 @@ const Login = () => {
                 className="w-1/4 px-3 py-2 focus:outline-none border-green-300 rounded-lg"
               />
             </div>
-
-            {error.status === true ? <ErrorText text={error.message} /> : null}
-
             <div className="w-full flex-box flex-col gap-3">
               {pathname === "/register" ? (
                 <>
@@ -160,6 +156,7 @@ const Login = () => {
               )}
             </div>
           </Form>
+          {error.status === true ? <ErrorText text={error.message} /> : null}
         </div>
       </div>
     </section>
