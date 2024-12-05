@@ -98,20 +98,18 @@ const getEmergencyContact = asynchandler(async (req, res) => {
     secondaryrespondername,
     secondaryresponderphone,
   } = emergencyContact.emergencyContactPhone || {};
-  return res
-    .status(200)
-    .json(
-      new apiresponse(
-        200,
-        {
-          primaryrespondername,
-          primaryresponderphone,
-          secondaryrespondername,
-          secondaryresponderphone,
-        },
-        "Emergency Contact Fetched Successfully!"
-      )
-    );
+  return res.status(200).json(
+    new apiresponse(
+      200,
+      {
+        primaryrespondername,
+        primaryresponderphone,
+        secondaryrespondername,
+        secondaryresponderphone,
+      },
+      "Emergency Contact Fetched Successfully!"
+    )
+  );
 });
 
 const getVisitHistory = asynchandler(async (req, res) => {
@@ -174,7 +172,7 @@ const upBasicInfo = asynchandler(async (req, res) => {
     Object.entries(updateData).filter(([key, value]) => value !== undefined)
   );
   const fullNameRegex = /^[a-zA-Z\s]{3,64}$/;
-  const dateOfBirthRegex = /^\d{2}-\d{2}-\d{4}$/;
+  const dateOfBirthRegex = /^\d{4}-\d{2}-\d{2}$/;
 
   //Date Format : "2024-11-17"
   const genderRegex = /^(Male|Female|Other)$/;
