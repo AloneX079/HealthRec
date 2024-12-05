@@ -47,27 +47,21 @@ function DoctorDash() {
     }));
     const payload = {
       patid: patientId,
-      medicalHistory: patientRecord[patientId].medicalHistory,
-      familyMedicalHistory: patientRecord[patientId].familyMedicalHistory,
-      allergies: patientRecord[patientId].allergies,
-      immunizationHistory: patientRecord[patientId].immunizationHistory,
-      surgeriesHistory: patientRecord[patientId].surgeriesHistory,
+      [category]: newItem.trim(),
     };
-    upPatientMedicalHistory(payload)
-      .then((response) => {
-        if (response.success) {
-          console.log("Patient medical data updated successfully.");
-        } else {
-          console.error(
-            "Error updating patient medical data:",
-            response.message
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Error while sending data:", error);
-      });
-    setNewMedicalHistoryItem("");
+    console.log(payload);
+    upPatientMedicalHistory(payload);
+    if (category === "medicalHistory") {
+      setNewMedicalHistoryItem("");
+    } else if (category === "familyMedicalHistory") {
+      setNewFamilyMedicalHistoryItem("");
+    } else if (category === "allergies") {
+      setNewAllergy("");
+    } else if (category === "immunizationHistory") {
+      setNewImmunization("");
+    } else if (category === "surgeriesUndergone") {
+      setNewSurgery("");
+    }
   };
 
   const handleChange = (e, patientId) => {
@@ -426,7 +420,9 @@ function DoctorDash() {
                   placeholder="Add new allergy"
                 />
                 <button
-                  onClick={() => handleAddItem(patient.patient, newAllergy)}
+                  onClick={() =>
+                    handleAddItem(patient.patient, "allergies", newAllergy)
+                  }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
                   <Plus />
@@ -457,7 +453,11 @@ function DoctorDash() {
                 />
                 <button
                   onClick={() =>
-                    handleAddItem(patient.patient, newImmunization)
+                    handleAddItem(
+                      patient.patient,
+                      "immunizationHistory",
+                      newImmunization
+                    )
                   }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
@@ -488,7 +488,13 @@ function DoctorDash() {
                   placeholder="Add new surgery"
                 />
                 <button
-                  onClick={() => handleAddItem(patient.patient, newSurgery)}
+                  onClick={() =>
+                    handleAddItem(
+                      patient.patient,
+                      "surgeriesUndergone",
+                      newSurgery
+                    )
+                  }
                   className="mt-2 bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600"
                 >
                   <Plus />

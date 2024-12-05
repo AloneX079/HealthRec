@@ -152,7 +152,7 @@ export const upPatientMedicalHistory = async (record) => {
         familyMedicalHistory: record.familyMedicalHistory,
         allergies: record.allergies,
         immunizationHistory: record.immunizationHistory,
-        surgeriesHistory: record.surgeriesHistory,
+        surgeriesUndergone: record.surgeriesUndergone,
       },
       {
         headers: {
