@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview --port 25580 --host 127.0.0.1"
+    "preview": "vite preview --port 25580 --host"
   },
   "dependencies": {
     "axios": "^1.7.8",
