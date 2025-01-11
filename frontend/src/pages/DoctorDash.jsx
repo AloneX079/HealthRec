@@ -28,6 +28,7 @@ function DoctorDash() {
   const [patientPrescription, setPatientPrescription] = useState({});
   const [upillness, setIllness] = useState("");
   const [medicine, setMedicine] = useState("");
+  const [prescribedTest, setPrescribedTest] = useState("");
   const navigate = useNavigate();
 
   const initialError = {
@@ -57,7 +58,7 @@ function DoctorDash() {
       patid: patientId,
       [category]: newItem.trim(),
     };
-    console.log(payload);
+    // console.log(payload);
     upPatientMedicalHistory(payload);
     if (category === "medicalHistory") {
       setNewMedicalHistoryItem("");
@@ -87,9 +88,14 @@ function DoctorDash() {
     setIllness(e.target.value);
   };
 
+  const handlePrescribedTestChange = (e) => {
+    setPrescribedTest(e.target.value);
+  };
+
   const handleMedicineChange = (e) => {
     setMedicine(e.target.value);
   };
+
   const saveChanges = () => {
     let patientid = selectedItem;
     const payload = {
@@ -97,16 +103,17 @@ function DoctorDash() {
       LastBloodPressureInMmHg: patientRecord[patientid].LastBloodPressureInMmHg,
       LastHeartRateInBpm: patientRecord[patientid].LastHeartRateInBpm,
     };
-    console.log(payload);
     upPatientRecordDoctor(payload);
     setIsEditing(false);
   };
+
   const savePrescribeChanges = () => {
     let patientid = selectedItem;
     const payload = {
       patid: patientid,
       illness: upillness,
       prescription: medicine,
+      prescribedTest: prescribedTest,
     };
     upPatientPrescription(payload);
     setPrescribing(false);
@@ -223,6 +230,21 @@ function DoctorDash() {
                   type="text"
                   name="medicine"
                   onChange={handleMedicineChange}
+                  className="border border-gray-300 rounded px-2 py-1 w-2/5"
+                />
+              ) : (
+                <span className="text-lg">{}</span>
+              )}
+            </div>
+            <div className="flex justify-between">
+              <span className="text-lg font-medium text-green-800">
+                Prescribe Test:
+              </span>
+              {isPrescribing ? (
+                <input
+                  type="text"
+                  name="prescribedTest"
+                  onChange={handlePrescribedTestChange}
                   className="border border-gray-300 rounded px-2 py-1 w-2/5"
                 />
               ) : (

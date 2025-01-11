@@ -98,6 +98,7 @@ export const upPatientPrescription = async (prescription) => {
         patid: prescription.patid,
         illness: prescription.illness,
         prescription: prescription.prescription,
+        prescribedTest: prescription.prescribedTest,
       },
       {
         headers: {
