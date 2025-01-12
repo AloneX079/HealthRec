@@ -23,8 +23,10 @@ function DoctorDash() {
   const { user, setUser, loading, setLoading } = useUserContext();
   const [isEditing, setIsEditing] = useState(false);
   const [isPrescribing, setPrescribing] = useState(false);
+  const [isUpdatingResult, setUpdatedResult] = useState(false);
   const handlePrescribeToggle = () => setPrescribing(!isPrescribing);
   const handleEditToggle = () => setIsEditing(!isEditing);
+  const handleResultToggle = () => setUpdatedResult(!isUpdatingResult);
   const [patientPrescription, setPatientPrescription] = useState({});
   const [upillness, setIllness] = useState("");
   const [medicine, setMedicine] = useState("");
@@ -108,6 +110,18 @@ function DoctorDash() {
   };
 
   const savePrescribeChanges = () => {
+    let patientid = selectedItem;
+    const payload = {
+      patid: patientid,
+      illness: upillness,
+      prescription: medicine,
+      prescribedTest: prescribedTest,
+    };
+    upPatientPrescription(payload);
+    setPrescribing(false);
+  };
+
+  const saveResultChanges = () => {
     let patientid = selectedItem;
     const payload = {
       patid: patientid,
@@ -238,7 +252,7 @@ function DoctorDash() {
             </div>
             <div className="flex justify-between">
               <span className="text-lg font-medium text-green-800">
-                Prescribe Test:
+                Prescribe Test(If Any):
               </span>
               {isPrescribing ? (
                 <input
@@ -576,6 +590,32 @@ function DoctorDash() {
             />
           </div>
           <div className="flex justify-between my-5">
+            <h2 className="text-3xl font-bold text-green-900">
+              Update Test Result
+            </h2>
+            <div className="flex gap-2 ">
+              {isUpdatingResult && (
+                <button
+                  onClick={saveResultChanges}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Update Result
+                </button>
+              )}
+              <button
+                onClick={handleResultToggle}
+                className={`text-white px-4 py-2 rounded  ${
+                  isUpdatingResult
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-green-500 hover:bg-green-600"
+                }`}
+              >
+                {isUpdatingResult ? "Cancel" : "Update"}
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-3"></div>
+          <div className="flex justify-between my-5">
             <h2 className="text-3xl font-bold text-green-900">Visit History</h2>
           </div>
           <div className="h-full overflow-y-auto border border-gray-300 rounded-lg p-6">
@@ -596,6 +636,12 @@ function DoctorDash() {
                   <p className="text-lg font-medium text-green-800">
                     Prescription:{" "}
                     <span className="text-gray-800">{item?.prescription}</span>
+                  </p>
+                  <p className="text-lg font-medium text-green-800">
+                    Prescribed Test (If Any):{" "}
+                    <span className="text-gray-800">
+                      {item?.prescribedTest}
+                    </span>
                   </p>
                   <p className="text-lg font-medium text-green-800">
                     Created At:{" "}

@@ -605,7 +605,7 @@ const upVisitHistory = asynchandler(async (req, res) => {
   if (!req.user.isDoctor)
     throw new apierror(401, "Unauthorized Access! ERR:record.controller.l513");
   const { patid, illness, prescription, prescribedTest } = req.body;
-  if (!patid || !illness || !prescription || !prescribedTest)
+  if (!patid || !illness || !prescription)
     throw new apierror(400, "Fields Required! ERR:record.controller.l516");
   const patient = await User.findById(patid);
   if (!patient)
@@ -668,11 +668,7 @@ const upVisitHistory = asynchandler(async (req, res) => {
 const getPresPhar = asynchandler(async (req, res) => {
   const user = req.user;
   if (!(user.isDoctor || user.isPharmacist))
-    if (!req.user.isPharmacist || !req.user.isDoctor)
-      throw new apierror(
-        401,
-        "Unauthorized Access! ERR:record.controller.l565"
-      );
+    throw new apierror(401, "Unauthorized Access! ERR:record.controller.l565");
   const { patid } = req.body;
   if (!patid || typeof patid !== "string" || patid.trim() === "")
     throw new apierror(400, "Patient ID Required! ERR:record.controller.l567");
@@ -700,6 +696,23 @@ const getPresPhar = asynchandler(async (req, res) => {
     .json(new apiresponse(200, prescs, "Prescriptions Fetched Successfully!"));
 });
 
+const getPendingResult = asynchandler(async (req, res) => {
+  const user = req.user;
+  if (!user.isDoctor)
+    throw new apierror(401, "Unauthorized Access! ERR:record.controller.l702");
+  const { patid } = req.body;
+  if (!patid || typeof patid !== "string" || patid.trim() === "")
+    throw new apierror(400, "Patient ID Required! ERR:record.controller.l705");
+  const checkPerms = await Perm.find({
+    doctor: req.user._id,
+    patient: patid,
+  });
+  if (!checkPerms)
+    throw new apierror(404, "No Permissions Found! ERR:record.controller.l708");
+  const prescs = await Presc.find({
+    doctorid: req.user._id,
+  });
+});
 // const upInsuranceInfo = asynchandler(async(req,res)=>{
 //     const checkExists = await Record.findOne({
 //         pid:req.user._id
