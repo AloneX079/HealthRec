@@ -13,15 +13,17 @@ import {
 import PatientBasicInfo from "../components/PatientBasicInfo";
 import { Plus } from "lucide-react";
 import ErrorText from "../components/ErrorText";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import PrescDropDown from "../components/PrescDropDown";
+import Loading from "../components/Loading";
 
 function DoctorDash() {
   // const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedItem, setSelectedItem] = useState("Doctor QR");
   const [patientList, setPatientList] = useState([]);
   const [patientRecord, setPatientRecord] = useState({});
-  const { user, setUser, loading, setLoading } = useUserContext();
+  const [loading, setLoading] = useState(true);
+  const { user, setUser } = useUserContext();
   const [isEditing, setIsEditing] = useState(false);
   const [isPrescribing, setPrescribing] = useState(false);
   const handlePrescribeToggle = () => setPrescribing(!isPrescribing);
@@ -30,7 +32,6 @@ function DoctorDash() {
   const [upillness, setIllness] = useState("");
   const [medicine, setMedicine] = useState("");
   const [prescribedTest, setPrescribedTest] = useState("");
-  const navigate = useNavigate();
 
   const initialError = {
     status: false,
@@ -122,7 +123,6 @@ function DoctorDash() {
 
   const fetchPatientList = async () => {
     try {
-      setLoading(true);
       const patientListResponse = await getPatientList();
       if (patientListResponse.data.success) {
         const fetchedPatientList = patientListResponse.data.data;
@@ -164,13 +164,19 @@ function DoctorDash() {
   };
 
   useEffect(() => {
-    fetchPatientList();
-    if (!user?.isDoctor) {
-      setError({ status: true, message: "Unauthorized" });
-      navigate("/dashboard", { replace: true });
-    }
+    setLoading(true);
+    setTimeout(() => {
+      fetchPatientList();
+      setLoading(false);
+    }, 900);
   }, []);
-
+  if (loading) {
+    return (
+      <div className="h-screen flex-col bg-gradient-to-br from-white via-green-300 to-green-600 flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
   const content = patientList.reduce((acc, patient) => {
     const patientData = patientRecord[patient.patient];
     if (patientData) {
