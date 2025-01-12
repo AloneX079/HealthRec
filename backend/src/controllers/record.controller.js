@@ -605,7 +605,7 @@ const upVisitHistory = asynchandler(async (req, res) => {
   if (!req.user.isDoctor)
     throw new apierror(401, "Unauthorized Access! ERR:record.controller.l513");
   const { patid, illness, prescription, prescribedTest } = req.body;
-  if (!patid || !illness || !prescription || prescribedTest)
+  if (!patid || !illness || !prescription || !prescribedTest)
     throw new apierror(400, "Fields Required! ERR:record.controller.l516");
   const patient = await User.findById(patid);
   if (!patient)
