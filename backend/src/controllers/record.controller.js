@@ -724,6 +724,28 @@ const getPendingResult = asynchandler(async (req, res) => {
       new apiresponse(200, prescs, "Pending Results Fetched Successfully!")
     );
 });
+
+const updatePendingResult = asynchandler(async (req, res) => {
+  const user = req.user;
+  if (!user.isDoctor)
+    throw new apierror(401, "Unauthorized Access! ERR:record.controller.l731");
+  const { presid, result } = req.body;
+  if (!presid || !result)
+    throw new apierror(400, "Fields Required! ERR:record.controller.l734");
+  const checkPresc = await Presc.findById(presid);
+  if (!checkPresc)
+    throw new apierror(
+      404,
+      "Prescription Not Found! ERR:record.controller.l737"
+    );
+  if (checkPresc.doctorid.toString() !== user._id.toString())
+    throw new apierror(401, "Unauthorized Access! ERR:record.controller.l739");
+  checkPresc.result = result;
+  await checkPresc.save();
+  return res
+    .status(200)
+    .json(new apiresponse(200, checkPresc, "Result Updated Successfully!"));
+});
 // const upInsuranceInfo = asynchandler(async(req,res)=>{
 //     const checkExists = await Record.findOne({
 //         pid:req.user._id
@@ -765,4 +787,5 @@ module.exports = {
   upVisitHistory,
   getPresPhar,
   getPendingResult,
+  updatePendingResult,
 };

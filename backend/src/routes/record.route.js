@@ -13,6 +13,7 @@ const {
   getPresPhar,
   upVisitHistory,
   getPendingResult,
+  updatePendingResult,
 } = require("../controllers/record.controller.js");
 const { verifyJWT } = require("../middlewares/auth.mw.js");
 
@@ -34,6 +35,7 @@ router.route("/upmedhist").post(verifyJWT, upMedicalHistory);
 router.route("/upvitals").post(verifyJWT, upPatientVitals);
 router.route("/upvishist").post(verifyJWT, upVisitHistory);
 router.route("/getdocpinf").post(verifyJWT, getPatientInfo);
+router.route("/uppendres").post(verifyJWT, updatePendingResult);
 
 // router.route('/getdocmedhist').post(verifyJWT,getPatientMedicalHistory)
 // router.route('/getdocvitals').post(verifyJWT,getPatientVitals)
