@@ -740,7 +740,7 @@ const updatePendingResult = asynchandler(async (req, res) => {
     );
   if (checkPresc.doctorid.toString() !== user._id.toString())
     throw new apierror(401, "Unauthorized Access! ERR:record.controller.l739");
-  checkPresc.result = result;
+  checkPresc.testResults = result;
   await checkPresc.save();
   return res
     .status(200)
