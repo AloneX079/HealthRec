@@ -48,6 +48,30 @@ export const getPatientPrescription = async (patientid) => {
   }
 };
 
+export const getPendingResult = async (patientid) => {
+  try {
+    const { data, status } = await axiosInstance.post(
+      "/reco/getpendres",
+      {
+        patid: patientid,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (status != 200) {
+      throw new Error("Error while fetching data");
+    }
+    return { success: true, data: data };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
 export const upUserDashboard = async (record) => {
   try {
     console.log(record.dateOfBirth);
@@ -154,6 +178,31 @@ export const upPatientMedicalHistory = async (record) => {
         allergies: record.allergies,
         immunizationHistory: record.immunizationHistory,
         surgeriesUndergone: record.surgeriesUndergone,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (status != 200) {
+      throw new Error("Error while sending data data");
+    }
+    return { success: true, data: data };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const updatePendingResult = async (presc) => {
+  try {
+    const { data, status } = await axiosInstance.post(
+      "/reco/uppendres",
+      {
+        presid: presc.presid,
+        result: presc.result,
       },
       {
         headers: {

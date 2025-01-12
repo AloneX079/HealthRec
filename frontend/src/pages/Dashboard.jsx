@@ -493,7 +493,8 @@ function Dashboard() {
                   Doctor: <span className="text-gray-800">{item?.doctor}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
-                  Illness: <span className="text-gray-800">{item?.illness}</span>
+                  Illness:{" "}
+                  <span className="text-gray-800">{item?.illness}</span>
                 </p>
                 <p className="text-lg font-medium text-green-800">
                   Prescription:{" "}
@@ -502,6 +503,14 @@ function Dashboard() {
                 <p className="text-lg font-medium text-green-800">
                   Created At:{" "}
                   <span className="text-gray-800">{item?.createdAt}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Prescribed Test (If Any):{" "}
+                  <span className="text-gray-800">{item?.prescribedTest}</span>
+                </p>
+                <p className="text-lg font-medium text-green-800">
+                  Test Results:{" "}
+                  <span className="text-gray-800">{item?.testResults}</span>
                 </p>
               </div>
             ))}
