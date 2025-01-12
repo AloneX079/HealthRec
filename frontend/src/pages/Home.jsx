@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 function Home() {
   // const context = useUserContext();
   // const navigate = useNavigate();
-  const words = ["HealthRec", "Simplified", "Secure"];
+  const words = ["HealthRec", "Health Records", "Simplified", "Secure"];
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopIndex, setLoopIndex] = useState(0);
@@ -21,10 +21,10 @@ function Home() {
       const currentWord = words[loopIndex % words.length];
       if (isDeleting) {
         setText((prev) => prev.slice(0, prev.length - 1));
-        setSpeed(100);
+        setSpeed(60);
       } else {
         setText((prev) => currentWord.slice(0, prev.length + 1));
-        setSpeed(150);
+        setSpeed(200);
       }
 
       if (!isDeleting && text === currentWord) {
