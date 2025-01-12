@@ -711,7 +711,18 @@ const getPendingResult = asynchandler(async (req, res) => {
     throw new apierror(404, "No Permissions Found! ERR:record.controller.l708");
   const prescs = await Presc.find({
     doctorid: req.user._id,
+    prescribedTest: { $exists: true, $ne: "" },
   });
+  if (prescs.length < 1) {
+    return res
+      .status(200)
+      .json(new apiresponse(200, [], "No Pending Results!"));
+  }
+  return res
+    .status(200)
+    .json(
+      new apiresponse(200, prescs, "Pending Results Fetched Successfully!")
+    );
 });
 // const upInsuranceInfo = asynchandler(async(req,res)=>{
 //     const checkExists = await Record.findOne({
@@ -753,4 +764,5 @@ module.exports = {
   getPatientInfo,
   upVisitHistory,
   getPresPhar,
+  getPendingResult,
 };
